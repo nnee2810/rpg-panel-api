@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,1415 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model apartaments {
+  ID     Int
+  X      Float  @db.Float
+  Y      Float  @db.Float
+  Z      Float  @db.Float
+  Angle  Float  @db.Float
+  UserID Int
+  Value  Int
+  Lock   Int
+  Owner  String @db.VarChar(25)
+
+  @@ignore
+}
+
+model badges {
+  id        Int      @id
+  idd       Int
+  text      String   @db.Text
+  colortext Int
+  postby    String   @db.Text
+  posttime  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model banlog {
+  ID     Int      @id @default(autoincrement())
+  ip     String   @db.VarChar(25)
+  player String   @db.VarChar(25)
+  admin  String   @db.VarChar(25)
+  reason String   @db.VarChar(60)
+  day    Int      @default(0)
+  time   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model bans {
+  ID          Int      @id @default(autoincrement())
+  PlayerName  String   @db.VarChar(30)
+  AdminName   String   @db.VarChar(30)
+  Reason      String   @db.VarChar(128)
+  IP          String   @db.VarChar(16)
+  Days        Int
+  IPBan       Int
+  Permanent   Int
+  Time        Int
+  BanTimeDate DateTime @default(now()) @db.Timestamp(0)
+  Active      Int
+}
+
+model bizz {
+  ID           Int    @id @default(autoincrement()) @db.SmallInt
+  Owned        Int
+  Owner        String @default("The State") @db.VarChar(25)
+  Type         Int
+  Message      String @db.VarChar(50)
+  EntranceX    Float  @db.Float
+  EntranceY    Float  @db.Float
+  EntranceZ    Float  @db.Float
+  ExitX        Float  @db.Float
+  ExitY        Float  @db.Float
+  ExitZ        Float  @db.Float
+  LevelNeeded  Int    @default(10)
+  BuyPrice     BigInt @default(1000000000) @db.UnsignedBigInt
+  EntranceCost Int
+  Till         Int
+  Locked       Int
+  Interior     Int
+  Virtual      Int    @db.UnsignedSmallInt
+  Radio        Int    @default(-1) @db.TinyInt
+  Static       Int    @db.TinyInt
+  Gas          Int    @db.TinyInt
+  Products     Int    @default(0) @db.UnsignedInt
+  Prices       BigInt @default(1000000000) @db.UnsignedBigInt
+}
+
+model blacklist {
+  ID      Int    @id @default(autoincrement())
+  Userid  Int
+  Name    String @db.VarChar(256)
+  Faction Int
+  Reason  Int
+  Added   String @db.VarChar(256)
+}
+
+model blockedcommands {
+  ID     Int    @id @default(autoincrement())
+  Reason String @db.VarChar(100)
+  Text   String @unique(map: "Text") @db.VarChar(50)
+}
+
+model cars {
+  ID          Int    @id @default(autoincrement())
+  Model       Int?
+  Locationx   Float? @db.Float
+  Locationy   Float? @db.Float
+  Locationz   Float? @db.Float
+  Angle       Float? @db.Float
+  ColorOne    Int?   @db.UnsignedSmallInt
+  ColorTwo    Int?   @db.UnsignedSmallInt
+  Owner       String @default("Dealership") @db.VarChar(50)
+  Value       Int    @default(100000)
+  License     String @default("LS-01-RGM") @db.VarChar(15)
+  Alarm       Int    @default(0)
+  Lockk       Int    @default(0)
+  mod0        Int    @default(0)
+  mod1        Int    @default(0)
+  mod2        Int    @default(0)
+  mod3        Int    @default(0)
+  mod4        Int    @default(0)
+  mod5        Int    @default(0)
+  mod6        Int    @default(0)
+  mod7        Int    @default(0)
+  mod8        Int    @default(0)
+  mod9        Int    @default(0)
+  mod10       Int    @default(0)
+  mod11       Int    @default(0)
+  mod12       Int    @default(0)
+  mod13       Int    @default(0)
+  paintjob    Int    @default(3)
+  KM          Float  @default(0) @db.Float
+  Userid      Int    @default(0)
+  Confiscated Int    @default(0) @db.TinyInt
+  Spawned     Int    @default(0) @db.UnsignedSmallInt
+  Special     Int    @default(0) @db.TinyInt
+  Points      Int    @default(5) @db.UnsignedSmallInt
+  Tax         Int    @default(50) @db.UnsignedMediumInt
+  Fuel        Int    @default(100) @db.UnsignedTinyInt
+  Neon        Int    @default(0) @db.UnsignedTinyInt
+  Text        String @default("-") @db.VarChar(30)
+  ColorText   Int    @default(0) @db.UnsignedTinyInt
+  Level       Int    @default(0) @db.UnsignedTinyInt
+}
+
+model clans {
+  ID           Int     @id @default(autoincrement())
+  Owner        String? @default("") @db.VarChar(64)
+  OwnerSQL     Int?    @default(0)
+  Name         String? @default("") @db.VarChar(64)
+  Motd         String? @default("Chua thiet lap.") @db.VarChar(180)
+  Tag          String? @db.VarChar(32)
+  RankName1    String? @default("Rank 1") @db.VarChar(30)
+  RankName2    String? @default("Rank 2") @db.VarChar(30)
+  RankName3    String? @default("Rank 3") @db.VarChar(30)
+  RankName4    String? @default("Rank 4") @db.VarChar(30)
+  RankName5    String? @default("Rank 5") @db.VarChar(30)
+  RankName6    String? @default("Rank 6") @db.VarChar(30)
+  Color        String? @default("FFFFFF") @db.VarChar(10)
+  Slots        Int?    @default(0)
+  RegisterDate String? @default("") @db.VarChar(64)
+  Days         Int?    @default(60) @db.SmallInt
+  TagType      Int?    @default(0) @db.TinyInt
+  ActivePoints Int?    @default(0)
+  Ore          Int?    @default(0)
+  Level        Int?    @default(0)
+}
+
+model clanzone {
+  ID    Int   @id @default(autoincrement())
+  X     Float @db.Float
+  Y     Float @db.Float
+  Z     Float @db.Float
+  Rot   Float @db.Float
+  Owned Int
+}
+
+model codes {
+  Code  String @id @db.VarChar(20)
+  Type  Int?   @default(1) @db.TinyInt
+  Money Int?
+  RP    Int?
+  PP    Int?
+  Ore   Int?
+}
+
+model comm_req {
+  Comm_Type   Int
+  Comm_UserID Int
+  Comm_Comm   String   @db.Text
+  Comm_Topic  Int
+  Comm_Time   DateTime @default(now()) @db.Timestamp(0)
+  Model       Int
+  ID          Int      @id @default(autoincrement())
+}
+
+model commands {
+  ID     Int      @id @default(autoincrement())
+  Name   String   @db.VarChar(100)
+  Reason String   @db.VarChar(100)
+  Date   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model commentaries {
+  Nickname Int
+  ID       Int      @id
+  Comment  String   @db.Text
+  Time     DateTime @default(now()) @db.Timestamp(0)
+  Category Int
+  Cat_id   Int
+}
+
+model complaints {
+  ID        Int    @id @default(autoincrement())
+  Username  String @db.Text
+  UsernameR String @db.Text
+  Type      Int
+  Reason    Int
+  Proofs    String @db.Text
+  Details   String @db.Text
+  Status    Int    @default(0)
+  Message   String @default("") @db.VarChar(255)
+  Date      Int    @default(0)
+}
+
+model complaints_comments {
+  ID          Int    @id @default(autoincrement())
+  Username    String @db.Text
+  Text        String @db.Text
+  Date        Int
+  ComplaintID Int
+
+  @@map("complaints-comments")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model cursewords {
+  word String? @db.TinyText
+
+  @@ignore
+}
+
+model dscars {
+  ID       Int @id @default(autoincrement())
+  Model    Int
+  Price    Int @default(1)
+  MaxSpeed Int @default(1)
+  Type     Int
+  Level    Int @default(0)
+  Premium  Int
+  Coins    Int @default(500)
+  Stock    Int @default(30)
+}
+
+model emails {
+  ID        Int    @id @default(autoincrement())
+  Type      Int    @default(0)
+  Name      String @default("") @db.VarChar(64)
+  Text      String @default("") @db.VarChar(256)
+  By        String @default("AdmBot") @db.VarChar(64)
+  Date      String @db.VarChar(256)
+  Read      Int    @default(0)
+  LinkPanel String @default("") @db.VarChar(255)
+}
+
+model faction_apply {
+  ID        Int    @id @default(autoincrement())
+  FactionID Int
+  Username  String @db.Text
+  Status    Int    @default(1)
+  I1        String @db.Text
+  I2        String @db.Text
+  I3        String @db.Text
+  I4        String @db.Text
+  I5        String @db.Text
+  I6        String @db.Text
+  I7        String @db.Text
+  I8        String @db.Text
+  I9        String @db.Text
+  I10       String @db.Text
+  I11       String @db.Text
+  I12       String @db.Text
+  I13       String @db.Text
+  I14       String @db.Text
+  I15       String @db.Text
+}
+
+model faction_logs {
+  id      Int    @id @default(autoincrement())
+  player  Int
+  leader  Int
+  Text    String @db.Text
+  time    String @default(dbgenerated("(current_timestamp())")) @db.Text
+  Deleted Int    @db.SmallInt
+}
+
+model factionlog {
+  ID        Int     @id @default(autoincrement())
+  factionid Int
+  player    String  @db.VarChar(64)
+  action    String  @db.VarChar(156)
+  time      String? @db.VarChar(0)
+}
+
+model factions {
+  ID          Int     @id @default(autoincrement())
+  Name        String? @db.VarChar(50)
+  X           Float?  @db.Float
+  Y           Float?  @db.Float
+  Z           Float?  @db.Float
+  Interior    Int?    @db.TinyInt
+  IntX        Float?  @db.Float
+  IntY        Float?  @db.Float
+  IntZ        Float?  @db.Float
+  VW          Int?    @db.SmallInt
+  Mats        Int     @default(0)
+  Drugs       Int     @default(0)
+  Bank        Int     @default(0)
+  Anunt       String? @db.VarChar(128)
+  PaydayMoney Int     @default(0)
+  Name1       String  @default("Rank1") @db.VarChar(50)
+  Name2       String  @default("Rank2") @db.VarChar(50)
+  Name3       String  @default("Rank3") @db.VarChar(50)
+  Name4       String  @default("Rank4") @db.VarChar(50)
+  Name5       String  @default("Rank5") @db.VarChar(50)
+  Name6       String  @default("Rank6") @db.VarChar(50)
+  Name7       String  @default("Rank7") @db.VarChar(50)
+  App         Int     @default(0) @db.TinyInt
+  Lock        Int     @default(0) @db.TinyInt
+  Slots       Int     @default(20) @db.TinyInt
+  Level       Int     @default(5) @db.TinyInt
+  Rank1       Int?
+  Rank2       Int?
+  Rank3       Int?
+  Rank4       Int?
+  Rank5       Int?
+  Rank6       Int?
+}
+
+model fobjects {
+  ID      Int     @id @default(autoincrement())
+  Model   Int?
+  X       Float?  @db.Float
+  Y       Float?  @db.Float
+  Z       Float?  @db.Float
+  RotX    Float?  @default(0) @db.Float
+  RotY    Float?  @default(0) @db.Float
+  RotZ    Float?  @default(0) @db.Float
+  Virtual Int?    @default(222)
+  House   Int?    @default(222)
+  Name    String? @default("No name") @db.VarChar(64)
+}
+
+model friends {
+  ID         Int    @id @default(autoincrement())
+  friendID   Int
+  friendName String @db.VarChar(644)
+  AddBy      Int
+}
+
+model ghidanh_boxing {
+  ID     Int       @id @default(autoincrement())
+  Userid Int?
+  Time   DateTime? @default(now()) @db.DateTime(0)
+  Type   Int?      @default(0) @db.SmallInt
+  Name   String?   @default("0") @db.VarChar(50)
+}
+
+model houses {
+  ID           Int    @id @default(autoincrement()) @db.UnsignedInt
+  Entrancex    Float  @db.Float
+  Entrancey    Float  @db.Float
+  Entrancez    Float  @db.Float
+  Exitx        Float  @db.Float
+  Exity        Float  @db.Float
+  Exitz        Float  @db.Float
+  Owner        String @default("AdmBot") @db.VarChar(25)
+  Discription  String @default("Em yeu Bac Ho") @db.VarChar(50)
+  Value        Int    @default(100000000)
+  Hel          Int    @default(0)
+  Arm          Int    @default(0)
+  Music        Int    @default(0)
+  Interior     Int    @default(0)
+  InteriorType Int    @default(0)
+  Lockk        Int    @default(0)
+  Owned        Int    @default(0)
+  Rent         Int    @default(0)
+  Rentabil     Int    @default(0)
+  Takings      Int    @default(0)
+  Level        Int    @default(15)
+  Virtual      Int    @default(0)
+  Prices       Int    @default(100000000)
+  garaj        Int    @default(2)
+  gSlot        Int    @default(0)
+  gAngel       Float  @default(0) @db.Float
+  gExtX        Float  @default(0) @db.Float
+  gExtY        Float  @default(0) @db.Float
+  gExtZ        Float  @default(0) @db.Float
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model inf_complaints {
+  complaint_id          Int
+  complaint_user        Int
+  complaint_against     Int
+  complaint_reason      String   @db.Text
+  complaint_proof       String   @db.Text
+  complaint_description String   @db.Text
+  complaint_status      Int
+  created_at            DateTime @default(now()) @db.Timestamp(0)
+
+  @@ignore
+}
+
+model inventory_items {
+  id           Int @id @default(autoincrement()) @db.UnsignedInt
+  player_sqlid Int @default(0) @db.UnsignedSmallInt
+  item_slot    Int @db.UnsignedInt
+  item_type    Int @db.UnsignedInt
+  item_modelid Int @db.UnsignedInt
+  item_value   Int @db.UnsignedInt
+}
+
+model ipbans {
+  ID     Int      @id @default(autoincrement())
+  Name   String   @default("No One") @db.VarChar(32)
+  Serial String   @db.VarChar(64)
+  By     String   @db.VarChar(64)
+  Reason String   @db.VarChar(64)
+  Date   DateTime @default(now()) @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model iplogs {
+  ID       Int
+  ip       String   @db.VarChar(64)
+  playerid Int
+  time     DateTime @default(now()) @db.Timestamp(0)
+
+  @@ignore
+}
+
+model jobs {
+  ID        Int    @id @default(autoincrement()) @db.UnsignedTinyInt
+  Name      String @default("No name") @db.VarChar(32)
+  NeedLevel Int
+  PosX      Float  @db.Float
+  PosY      Float  @db.Float
+  PosZ      Float  @db.Float
+  Legal     Int    @db.TinyInt
+  Skill1Veh Int    @default(400) @db.SmallInt
+  Skill2Veh Int    @default(400) @db.SmallInt
+  Skill3Veh Int    @default(400) @db.SmallInt
+  Skill4Veh Int    @default(400) @db.SmallInt
+  Skill5Veh Int    @default(400) @db.SmallInt
+  Skill6Veh Int    @default(400) @db.SmallInt
+  Bonus     Int    @default(0) @db.SmallInt
+  JobHour   Int?
+
+  @@index([ID], map: "ID")
+}
+
+model leader_fac {
+  ID         Int @id @default(autoincrement())
+  Fac_ID     Int
+  Fac_Status Int
+  Fac_Lv_Max Int
+}
+
+model leadhelp_req {
+  UserID   Int
+  ID       Int      @id @default(autoincrement())
+  Text1    String   @db.Text
+  Text2    String   @db.Text
+  Category Int
+  Status   Int
+  Created  DateTime @default(now()) @db.Timestamp(0)
+  Faction  Int
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model logs {
+  ID     Int
+  Userid Int
+  Text   String @db.VarChar(180)
+  Date   String @db.VarChar(256)
+  Type   Int
+  IP     String @db.VarChar(256)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model lotto {
+  jackpotactual Int @default(0)
+  jackpotvechi  Int @default(0)
+
+  @@ignore
+}
+
+model messages {
+  ms_id      Int    @id @default(autoincrement())
+  ms_from_id Int
+  ms_to_id   Int
+  ms_message String @db.Text
+  ms_time    Int
+  ms_read    Int
+}
+
+model oldusers {
+  Level              Int     @default(0) @db.UnsignedSmallInt
+  Bank               BigInt  @default(0) @db.UnsignedBigInt
+  Money              BigInt  @default(0) @db.UnsignedBigInt
+  id                 Int     @id @unique(map: "id_2") @default(autoincrement()) @db.UnsignedSmallInt
+  name               String  @db.VarChar(25)
+  password           String  @db.VarChar(50)
+  Security           String  @default("no") @db.VarChar(30)
+  IP                 String  @default("Not logged") @db.VarChar(16)
+  Admin              Int     @default(0) @db.TinyInt
+  Helper             Int     @default(0) @db.TinyInt
+  Premium            Int     @default(0)
+  ConnectedTime      Float   @default(0) @db.Float
+  Registered         Int     @default(0) @db.TinyInt
+  Sex                Int     @default(0) @db.TinyInt
+  Age                Int     @default(0) @db.TinyInt
+  Muted              Int     @default(0) @db.TinyInt
+  MuteTime           Int     @default(0) @db.SmallInt
+  Respect            Int     @default(0)
+  Crimes             Int     @default(0) @db.SmallInt
+  Kills              Int     @default(0) @db.SmallInt
+  Deaths             Int     @default(0) @db.SmallInt
+  Arrested           Int     @default(0) @db.SmallInt
+  WantedDeaths       Int     @default(0) @db.SmallInt
+  Phonebook          Int     @default(0) @db.TinyInt
+  LottoNr            Int     @default(0) @db.SmallInt
+  WantedLevel        Int     @default(0) @db.TinyInt
+  Job                Int     @default(0) @db.TinyInt
+  Paycheck           Int     @default(0) @db.UnsignedInt
+  Jailed             Int     @default(0) @db.UnsignedTinyInt
+  JailTime           Int     @default(0) @db.UnsignedInt
+  Materials          Int     @default(0)
+  Drugs              Int     @default(0)
+  Leader             Int     @default(0) @db.TinyInt
+  Member             Int     @default(0) @db.TinyInt
+  Rank               Int     @default(0) @db.TinyInt
+  CChar              Int     @default(250) @db.SmallInt
+  FWarn              Int     @default(0) @db.TinyInt
+  FPunish            Int     @default(0) @db.TinyInt
+  Acceptpoints       Int     @default(0) @db.SmallInt
+  Team               Int     @default(0) @db.TinyInt
+  Model              Int     @default(250) @db.SmallInt
+  PhoneNr            Int     @default(0) @db.UnsignedInt
+  PhoneCredits       Int     @default(0) @db.SmallInt
+  House              Int     @default(999) @db.SmallInt
+  Bizz               Int     @default(255) @db.SmallInt
+  Rob                Int     @default(0) @db.SmallInt
+  CarLicT            Int     @default(0) @db.SmallInt
+  CarLic             Int     @default(0) @db.TinyInt
+  FlyLicT            Int     @default(0) @db.SmallInt
+  FlyLic             Int     @default(0) @db.TinyInt
+  BoatLicT           Int     @default(0) @db.SmallInt
+  BoatLic            Int     @default(0) @db.TinyInt
+  FishLicT           Int     @default(0) @db.SmallInt
+  FishLic            Int     @default(0) @db.TinyInt
+  GunLicT            Int     @default(0) @db.SmallInt
+  GunLic             Int     @default(0) @db.TinyInt
+  PayDay             Int     @default(0) @db.SmallInt
+  PayDayHad          Int     @default(0) @db.SmallInt
+  Tutorial           Int     @default(0) @db.TinyInt
+  Warnings           Int     @default(0) @db.TinyInt
+  Rented             Int     @default(0) @db.SmallInt
+  Fuel               Int     @default(0) @db.SmallInt
+  WTalkie            Int     @default(0) @db.TinyInt
+  Lighter            Int     @default(0) @db.TinyInt
+  Cigarettes         Int     @default(0) @db.TinyInt
+  Tow                Int     @default(0) @db.TinyInt
+  Email              String  @default("macdinh@yahoo.com") @db.VarChar(50)
+  RegisterDate       String  @default("Khong ro") @db.VarChar(50)
+  lastOn             String  @default("Khong ro") @db.VarChar(50)
+  Banned             Int     @default(0) @db.UnsignedTinyInt
+  Victim             String? @db.VarChar(64)
+  Radio2             Int     @default(0) @db.SmallInt
+  Status             Int     @default(0) @db.TinyInt
+  CRank              Int     @default(0) @db.TinyInt
+  Phone              Int     @default(0) @db.UnsignedSmallInt
+  Accused            String  @default("********") @db.VarChar(64)
+  Crime1             String  @default("Khong co toi") @db.VarChar(184)
+  Crime2             String  @default("Khong co toi") @db.VarChar(184)
+  Crime3             String  @default("Khong co toi") @db.VarChar(184)
+  BTemp              Int     @default(0) @db.SmallInt
+  BYear              Int     @default(0) @db.SmallInt
+  BMonth             Int     @default(0) @db.UnsignedSmallInt
+  BDay               Int     @default(0) @db.UnsignedTinyInt
+  BBy                String? @db.VarChar(25)
+  BReason            String? @db.VarChar(184)
+  ALeader            Int     @default(0) @db.TinyInt
+  HPoints            Int     @default(0)
+  TruckerSkill       Int     @default(0) @db.SmallInt
+  GarbageSkill       Int     @default(0) @db.SmallInt
+  ShowJob            Int     @default(0) @db.TinyInt
+  ShowFP             Int     @default(0) @db.TinyInt
+  ShowLogo           Int     @default(1) @db.TinyInt
+  ShowCeas           Int     @default(1) @db.TinyInt
+  MowerSkill         Int     @default(0) @db.SmallInt
+  PremiumPoints      Int     @default(0)
+  Clan               Int     @default(0) @db.UnsignedSmallInt
+  ClanRank           Int     @default(0) @db.UnsignedTinyInt
+  CarKey1            Int     @default(0) @db.UnsignedSmallInt
+  CarKey2            Int     @default(0) @db.UnsignedSmallInt
+  CarKey3            Int     @default(0) @db.UnsignedSmallInt
+  CarKey4            Int     @default(0) @db.UnsignedSmallInt
+  CarKey5            Int     @default(0) @db.UnsignedSmallInt
+  Pin                Int     @default(0) @db.UnsignedSmallInt
+  Seconds            Int     @default(0)
+  Commands           Int     @default(0)
+  Commands2          Int     @default(0)
+  Commands3          Int     @default(0)
+  Commands4          Int     @default(0)
+  Commands5          Int     @default(0)
+  ShowFaction        Int     @default(0)
+  GiftPoints         Int     @default(0)
+  NewbieMute         Int     @default(0)
+  HelpedPlayers      Int     @default(0)
+  SpawnChange        Int     @default(0)
+  DailyMission       Int     @default(-1)
+  DailyMission2      Int     @default(-1)
+  Progress           Int     @default(0)
+  Progress2          Int     @default(0)
+  NeedProgress1      Int     @default(0)
+  NeedProgress2      Int     @default(0)
+  Youtuber           Int     @default(0) @db.TinyInt
+  IceSkill           Int     @default(0) @db.SmallInt
+  ReportTime         Int     @default(0)
+  EvSeconds          Int     @default(0)
+  Descalificat       String  @default("0") @db.VarChar(256)
+  WTChannel          Int     @default(0)
+  PizzaSkill         Int     @default(0) @db.SmallInt
+  GasCan             Int     @default(0) @db.TinyInt
+  CurierSkill        Int     @default(0) @db.SmallInt
+  ShowGlasses        Int     @default(0)
+  Glasses            Int     @default(0)
+  HelpedPlayersToday Int     @default(0)
+  Used               Int     @default(0)
+  Days               Int     @default(0)
+  FarmerSkill        Int     @default(0)
+  PilotSkill         Int     @default(0)
+  ShowHP             Int     @default(0) @db.TinyInt
+  ShowAP             Int     @default(0) @db.TinyInt
+  Color              Int     @default(0)
+  Kicks              Int     @default(0)
+  Warns              Int     @default(0)
+  Bans               Int     @default(0)
+  Jails              Int     @default(0)
+  Mutes              Int     @default(0)
+  HoursMonth         Int     @default(0) @db.SmallInt
+  DayHours           Int     @default(0)
+  Slot1              Int     @default(0)
+  Slot2              Int     @default(0)
+  Slot3              Int     @default(0)
+  Slot4              Int     @default(0)
+  Slot5              Int     @default(0)
+  CarKey6            Int     @default(0) @db.UnsignedSmallInt
+  CarKey7            Int     @default(0) @db.UnsignedSmallInt
+  CarKey8            Int     @default(0) @db.UnsignedSmallInt
+  CarKey9            Int     @default(0) @db.UnsignedSmallInt
+  CarKey10           Int     @default(0) @db.UnsignedSmallInt
+  Vip                Int     @default(0)
+  Mats               Int     @default(0)
+  ClanWarns          Int     @default(0) @db.TinyInt
+  ClanDays           Int     @default(0) @db.SmallInt
+  CarLicS            Int     @default(0) @db.SmallInt
+  FlyLicS            Int     @default(0) @db.SmallInt
+  BoatLicS           Int     @default(0) @db.SmallInt
+  GunLicS            Int     @default(0) @db.SmallInt
+  FishSkill          Int     @default(0) @db.SmallInt
+  ShowDMG            Int     @default(0) @db.TinyInt
+  EscapePoints       Int     @default(0) @db.SmallInt
+  AJail              Int     @default(0)
+  Hat                Int     @default(0)
+  ShowHat            Int     @default(0) @db.TinyInt
+  NewbieChat         Int     @default(0) @db.TinyInt
+  TogLC              Int     @default(0) @db.TinyInt
+  TogFC              Int     @default(0) @db.TinyInt
+  TogWT              Int     @default(0) @db.TinyInt
+  HidePM             Int     @default(0) @db.TinyInt
+  TogNews            Int     @default(0) @db.TinyInt
+  TogLicitatie       Int     @default(0) @db.TinyInt
+  TogClan            Int     @default(0) @db.TinyInt
+  TogEvent           Int     @default(0) @db.TinyInt
+  TogDing            Int     @default(0) @db.TinyInt
+  PhoneOnline        Int     @default(0) @db.TinyInt
+  DayLogin           Int     @default(0) @db.TinyInt
+  AW                 Int     @default(0) @db.TinyInt
+  HW                 Int     @default(0) @db.TinyInt
+  LW                 Int     @default(0) @db.TinyInt
+  Tag                Int     @default(0) @db.TinyInt
+  MatSkill           Int     @default(0) @db.SmallInt
+  PaintKills1        Int     @default(0)
+  PaintKills2        Int     @default(0)
+  PaintKills3        Int     @default(0)
+  PaintDeaths1       Int     @default(0)
+  PaintDeaths2       Int     @default(0)
+  PaintDeaths3       Int     @default(0)
+  RacePoints         Int     @default(0)
+  RacePlace1         Int     @default(0)
+  RacePlace2         Int     @default(0)
+  RacePlace3         Int     @default(0)
+  RacePlace4         Int     @default(0)
+  ArenaKills         Int     @default(0)
+  ArenaDeaths        Int     @default(0)
+  Crash              Int     @default(0)
+  PosX               Float   @default(0) @db.Float
+  PosY               Float   @default(0) @db.Float
+  PosZ               Float   @default(0) @db.Float
+  InvalidCommands    Int     @default(0)
+  Referral           Int     @default(0)
+  ReferralMoney      Int     @default(0)
+  ReferralRP         Int     @default(0)
+  SpecialQuest       String  @default("0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0") @db.VarChar(300)
+  Coins              Int     @default(0)
+  StivuitorSkill     Int     @default(0) @db.SmallInt
+  DM                 Int     @default(0)
+  Propose            String  @default("Khong ai") @db.VarChar(64)
+  WarKills           Int     @default(0)
+  WarDeaths          Int     @default(0)
+  WarTurf            Int     @default(0)
+  TogVip             Int     @default(0) @db.TinyInt
+  Fires              Int     @default(0)
+  TogSurf            Int     @default(0) @db.TinyInt
+  TogFind            Int     @default(0) @db.TinyInt
+  TogRaport          Int     @default(0) @db.TinyInt
+  TogJob             Int     @default(0) @db.TinyInt
+  TogAlert           Int     @default(0) @db.TinyInt
+  ShowCP             Int     @default(0) @db.TinyInt
+  AchievementStatus  String  @default("0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0") @db.VarChar(64)
+  WantedTime         Int     @default(0)
+  ShowProgress1      Int     @default(0)
+  ShowProgress2      Int     @default(0)
+  DailyLogin         Int     @default(0) @db.TinyInt
+  Backpack           Int     @default(0) @db.TinyInt
+  NewsPaperSkill     Int     @default(0) @db.SmallInt
+  DailyBonus         Int     @default(0) @db.TinyInt
+  IceQuest           Int     @default(0) @db.TinyInt
+  OnlineLastWeek     Int     @default(0) @db.TinyInt
+  HeadValue          Int     @default(0)
+  MechSkill          Int     @default(0) @db.SmallInt
+  DrugsSkill         Int     @default(0) @db.SmallInt
+  RobSkill           Int     @default(0) @db.MediumInt
+  pHealth            Float   @default(99) @db.Float
+  Inter              Int     @default(0) @db.UnsignedTinyInt
+  Local              Int     @default(0) @db.UnsignedMediumInt
+  LawSkill           Int     @default(0) @db.SmallInt
+  GotCode            Int     @default(0) @db.TinyInt
+  Refund             Int     @default(0) @db.TinyInt
+  FightStyle         Int     @default(0) @db.TinyInt
+  Firework           Int     @default(0) @db.UnsignedSmallInt
+  ReAp               Int     @default(0) @db.UnsignedTinyInt
+  XuKhoa             Int     @default(0) @db.UnsignedMediumInt
+  ToySlot            Int     @default(0) @db.TinyInt
+  GangPoints         Int     @default(0)
+  FacingAngle        Float   @default(0) @db.Float
+  Newbie             Int     @default(0) @db.UnsignedTinyInt
+  Crates             Int     @default(0) @db.UnsignedTinyInt
+  JobBonus50         Int     @default(0)
+  JobBonus100        Int     @default(0)
+  pGotCode           Int?    @default(0) @db.TinyInt
+  refundFor          String? @db.VarChar(50)
+
+  @@index([id], map: "id")
+}
+
+model plant_types {
+  ID         Int     @id @default(autoincrement()) @db.UnsignedTinyInt
+  Name       String? @db.VarChar(50)
+  Time       Int?
+  ObjectID   Int?    @db.UnsignedInt
+  SeedAmount Int?    @default(10) @db.UnsignedInt
+}
+
+model planting {
+  ID         Int     @id @default(autoincrement()) @db.UnsignedInt
+  UserID     Int     @default(0) @db.UnsignedSmallInt
+  Type       Int     @db.UnsignedTinyInt
+  PosX       Float   @db.Float
+  PosY       Float   @db.Float
+  PosZ       Float   @db.Float
+  Time       Int?    @default(0) @db.MediumInt
+  NguoiTrong String? @db.VarChar(30)
+
+  @@index([UserID], map: "FK_weed_users")
+}
+
+model playerinventory {
+  ID       Int @id @default(autoincrement())
+  playerid Int
+  type     Int @default(0) @db.UnsignedTinyInt
+  value    Int @default(0) @db.UnsignedInt
+}
+
+model playertoys {
+  id       Int   @id @default(autoincrement())
+  player   Int
+  modelid  Int
+  bone     Int
+  posx     Float @db.Float
+  posy     Float @db.Float
+  posz     Float @db.Float
+  rotx     Float @db.Float
+  roty     Float @db.Float
+  rotz     Float @db.Float
+  scalex   Float @db.Float
+  scaley   Float @db.Float
+  scalez   Float @db.Float
+  tradable Int   @default(0)
+  special  Int   @default(0)
+}
+
+model safezones {
+  ID    Int   @id @default(autoincrement())
+  X     Float @db.Float
+  Y     Float @db.Float
+  Z     Float @db.Float
+  Range Int
+
+  @@index([ID], map: "ID")
+}
+
+model sanctions {
+  ID     Int    @id @default(autoincrement())
+  Player String @db.VarChar(256)
+  By     String @db.VarChar(256)
+  Time   String @db.VarChar(256)
+  Userid Int
+  Type   Int
+  Reason String @db.VarChar(256)
+}
+
+model seif {
+  sID        Int   @id @default(autoincrement())
+  sFactionID Int
+  sPosX      Float @db.Float
+  sPosY      Float @db.Float
+  sPosZ      Float @db.Float
+  sMoney     Int   @default(500000)
+  sDrugs     Int   @default(1000)
+  sMaterials Int   @default(100000)
+  sVirtualID Int
+}
+
+model stuff {
+  ID              Int     @id @default(autoincrement())
+  Tax             Int
+  TaxValue        Int
+  Giftbox         Int
+  GiftMoney       Int
+  GiftRP          Int
+  GiftGold        Int
+  GiftFP          Int
+  GiftVehicle     Int
+  GiftLevel       Int
+  MaxPlayers      Int
+  MaxPlayersDate  String  @db.VarChar(256)
+  StaffMotd       String  @db.VarChar(100)
+  SpawnX          Float?  @db.Float
+  SpawnY          Float?  @db.Float
+  SpawnZ          Float?  @db.Float
+  SpawnAngle      Float?  @db.Float
+  FishX           Float?  @db.Float
+  FishY           Float?  @db.Float
+  FishZ           Float?  @db.Float
+  DSX             Float?  @db.Float
+  DSY             Float?  @db.Float
+  DSZ             Float?  @db.Float
+  TodayJob        Int?    @db.UnsignedTinyInt
+  KHOACODE        Int     @db.TinyInt
+  NoXeCucManh     Int?    @default(1) @db.TinyInt
+  gx              Float?  @db.Float
+  gy              Float?  @db.Float
+  gz              Float?  @db.Float
+  HelperChatColor String? @db.VarChar(50)
+  BoxingMoney     Int?    @default(0)
+  StockCarCrate   Int
+  ServerGoal      Int     @default(0)
+}
+
+model svehicles {
+  vModel      Int    @default(0) @db.SmallInt
+  LocationX   Float  @default(0) @db.Float
+  LocationY   Float  @default(0) @db.Float
+  LocationZ   Float  @default(0) @db.Float
+  Angle       Float  @default(0) @db.Float
+  Color1      Int    @default(0) @db.SmallInt
+  Color2      Int    @default(0) @db.SmallInt
+  Clan        Int    @default(0) @db.TinyInt
+  Faction     Int    @default(0) @db.TinyInt
+  Rank        Int    @default(0) @db.TinyInt
+  NumberPlate String @default("NewCar") @db.VarChar(64)
+  Virtual     Int    @default(0)
+  vID         Int    @id @default(autoincrement())
+}
+
+model tickets {
+  ID          Int    @id @default(autoincrement())
+  Username    String @db.Text
+  Type        String @db.Text
+  Status      Int
+  Priority    String @db.Text
+  Description String @db.Text
+  Date        String @db.Text
+}
+
+model tickets_comments {
+  ID       Int    @id @default(autoincrement())
+  Username String @db.Text
+  Text     String @db.Text
+  Date     Int
+  TicketID Int
+
+  @@map("tickets-comments")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model tickets_panel {
+  ID       Int
+  Nickname Int
+  Ticket   String   @db.Text
+  Status   Int
+  Created  DateTime @default(now()) @db.Timestamp(0)
+
+  @@ignore
+}
+
+model transferlog {
+  ID    Int    @id @default(autoincrement())
+  ip1   String @db.VarChar(64)
+  ip2   String @db.VarChar(64)
+  psql1 Int
+  psql2 Int
+  money Int
+  time  String @db.VarChar(64)
+}
+
+model turfs {
+  ID    Int    @id @default(autoincrement())
+  Name  String @default("Khong ten") @db.VarChar(64)
+  Owned Int
+  Time  Int
+  MinX  Float  @db.Float
+  MinY  Float  @db.Float
+  MaxX  Float  @db.Float
+  MaxY  Float  @db.Float
+}
+
+model unban_panel {
+  ID          Int    @id @default(autoincrement())
+  Username    String @db.Text
+  Status      Int    @default(0)
+  Reason      String @db.Text
+  Poza        String @db.Text
+  Description String @db.Text
+  Date        String @db.Text
+  Now         Int    @default(0)
+
+  @@map("unban-panel")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model unban_req {
+  ID          Int
+  User_ID     Int
+  User_Desc   String   @db.Text
+  User_Dove   String   @db.Text
+  User_Ban    String   @db.Text
+  User_Time   DateTime @default(now()) @db.Timestamp(0)
+  User_Status Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model updates {
+  ID     Int
+  Time   DateTime @default(now()) @db.Timestamp(0)
+  Title  String   @default("0") @db.VarChar(50)
+  Author String   @default("0") @db.VarChar(50)
+  Text   String   @default("") @db.VarChar(50)
+
+  @@ignore
+}
+
+model users {
+  Level              Int     @default(1) @db.UnsignedSmallInt
+  Bank               BigInt  @default(0) @db.UnsignedBigInt
+  Money              BigInt  @default(0) @db.UnsignedBigInt
+  id                 Int     @id @unique(map: "id_2") @default(autoincrement()) @db.UnsignedSmallInt
+  name               String  @db.VarChar(25)
+  password           String  @db.VarChar(50)
+  Security           String  @default("no") @db.VarChar(30)
+  IP                 String  @default("Not logged") @db.VarChar(16)
+  Admin              Int     @default(0) @db.TinyInt
+  Helper             Int     @default(0) @db.TinyInt
+  Premium            Int     @default(0)
+  PremiumPoints      Int     @default(0)
+  ConnectedTime      Float   @default(0) @db.Float
+  Registered         Int     @default(0) @db.TinyInt
+  Sex                Int     @default(0) @db.TinyInt
+  Age                Int     @default(0) @db.TinyInt
+  Muted              Int     @default(0) @db.TinyInt
+  MuteTime           Int     @default(0) @db.SmallInt
+  Respect            Int     @default(0)
+  Crimes             Int     @default(0) @db.SmallInt
+  Kills              Int     @default(0) @db.SmallInt
+  Deaths             Int     @default(0) @db.SmallInt
+  Arrested           Int     @default(0) @db.SmallInt
+  WantedDeaths       Int     @default(0) @db.SmallInt
+  Phonebook          Int     @default(0) @db.TinyInt
+  LottoNr            Int     @default(0) @db.SmallInt
+  WantedLevel        Int     @default(0) @db.TinyInt
+  Job                Int     @default(0) @db.TinyInt
+  Paycheck           Int     @default(0) @db.UnsignedInt
+  Jailed             Int     @default(0) @db.UnsignedTinyInt
+  JailTime           Int     @default(0) @db.UnsignedInt
+  Materials          Int     @default(0)
+  Drugs              String  @default("0") @db.VarChar(50)
+  Leader             Int     @default(0) @db.TinyInt
+  Member             Int     @default(0) @db.TinyInt
+  Rank               Int     @default(0) @db.TinyInt
+  CChar              Int     @default(250) @db.SmallInt
+  FWarn              Int     @default(0) @db.TinyInt
+  FPunish            Int     @default(0) @db.TinyInt
+  Acceptpoints       Int     @default(0) @db.SmallInt
+  Team               Int     @default(0) @db.TinyInt
+  Model              Int     @default(250) @db.SmallInt
+  PhoneNr            Int     @default(0) @db.UnsignedInt
+  PhoneCredits       Int     @default(0) @db.SmallInt
+  House              Int     @default(999) @db.SmallInt
+  Bizz               Int     @default(255) @db.SmallInt
+  Rob                Int     @default(0) @db.SmallInt
+  CarLicT            Int     @default(0) @db.SmallInt
+  CarLic             Int     @default(0) @db.TinyInt
+  FlyLicT            Int     @default(0) @db.SmallInt
+  FlyLic             Int     @default(0) @db.TinyInt
+  BoatLicT           Int     @default(0) @db.SmallInt
+  BoatLic            Int     @default(0) @db.TinyInt
+  FishLicT           Int     @default(0) @db.SmallInt
+  FishLic            Int     @default(0) @db.TinyInt
+  GunLicT            Int     @default(0) @db.SmallInt
+  GunLic             Int     @default(0) @db.TinyInt
+  PayDay             Int     @default(0) @db.SmallInt
+  PayDayHad          Int     @default(0) @db.SmallInt
+  Tutorial           Int     @default(0) @db.TinyInt
+  Warnings           Int     @default(0) @db.TinyInt
+  Rented             Int     @default(0) @db.SmallInt
+  Fuel               Int     @default(0) @db.SmallInt
+  WTalkie            Int     @default(0) @db.TinyInt
+  Lighter            Int     @default(0) @db.TinyInt
+  Cigarettes         Int     @default(0) @db.TinyInt
+  Tow                Int     @default(0) @db.TinyInt
+  Email              String  @default("macdinh@yahoo.com") @db.VarChar(50)
+  RegisterDate       String  @default("Khong ro") @db.VarChar(50)
+  lastOn             String  @default("Khong ro") @db.VarChar(50)
+  Banned             Int     @default(0) @db.UnsignedTinyInt
+  Victim             String? @db.VarChar(64)
+  Radio2             Int     @default(0) @db.SmallInt
+  Status             Int     @default(0) @db.TinyInt
+  CRank              Int     @default(0) @db.TinyInt
+  Phone              Int     @default(0) @db.UnsignedSmallInt
+  Accused            String  @default("********") @db.VarChar(64)
+  Crime1             String  @default("Khong co toi") @db.VarChar(184)
+  Crime2             String  @default("Khong co toi") @db.VarChar(184)
+  Crime3             String  @default("Khong co toi") @db.VarChar(184)
+  BTemp              Int     @default(0) @db.SmallInt
+  BYear              Int     @default(0) @db.SmallInt
+  BMonth             Int     @default(0) @db.UnsignedSmallInt
+  BDay               Int     @default(0) @db.UnsignedTinyInt
+  BBy                String? @db.VarChar(25)
+  BReason            String? @db.VarChar(184)
+  ALeader            Int     @default(0) @db.TinyInt
+  HPoints            Int     @default(0)
+  TruckerSkill       Int     @default(0) @db.SmallInt
+  GarbageSkill       Int     @default(0) @db.SmallInt
+  ShowJob            Int     @default(0) @db.TinyInt
+  ShowFP             Int     @default(0) @db.TinyInt
+  ShowLogo           Int     @default(1) @db.TinyInt
+  ShowCeas           Int     @default(1) @db.TinyInt
+  MowerSkill         Int     @default(0) @db.SmallInt
+  Clan               Int     @default(0) @db.UnsignedSmallInt
+  ClanRank           Int     @default(0) @db.UnsignedTinyInt
+  Pin                Int     @default(0) @db.UnsignedSmallInt
+  Seconds            Int     @default(0)
+  Commands           Int     @default(0)
+  Commands2          Int     @default(0)
+  Commands3          Int     @default(0)
+  Commands4          Int     @default(0)
+  Commands5          Int     @default(0)
+  ShowFaction        Int     @default(0)
+  GiftPoints         Int     @default(0)
+  NewbieMute         Int     @default(0)
+  HelpedPlayers      Int     @default(0)
+  SpawnChange        Int     @default(0)
+  DailyMission       Int     @default(-1)
+  DailyMission2      Int     @default(-1)
+  Progress           Int     @default(0)
+  Progress2          Int     @default(0)
+  NeedProgress1      Int     @default(0)
+  NeedProgress2      Int     @default(0)
+  Youtuber           Int     @default(0) @db.TinyInt
+  IceSkill           Int     @default(0) @db.SmallInt
+  ReportTime         Int     @default(0)
+  EvSeconds          Int     @default(0)
+  Descalificat       String  @default("0") @db.VarChar(256)
+  WTChannel          Int     @default(0)
+  PizzaSkill         Int     @default(0) @db.SmallInt
+  GasCan             Int     @default(0) @db.TinyInt
+  CurierSkill        Int     @default(0) @db.SmallInt
+  ShowGlasses        Int     @default(0)
+  Glasses            Int     @default(0)
+  HelpedPlayersToday Int     @default(0)
+  Used               Int     @default(0)
+  Days               Int     @default(0)
+  FarmerSkill        Int     @default(0)
+  PilotSkill         Int     @default(0)
+  ShowHP             Int     @default(0) @db.TinyInt
+  ShowAP             Int     @default(0) @db.TinyInt
+  Color              Int     @default(0)
+  Kicks              Int     @default(0)
+  Warns              Int     @default(0)
+  Bans               Int     @default(0)
+  Jails              Int     @default(0)
+  Mutes              Int     @default(0)
+  HoursMonth         Int     @default(0) @db.SmallInt
+  DayHours           Int     @default(0)
+  Slot1              Int     @default(0)
+  Slot2              Int     @default(0)
+  Slot3              Int     @default(0)
+  Slot4              Int     @default(0)
+  Slot5              Int     @default(0)
+  Vip                Int     @default(0)
+  Mats               Int     @default(0)
+  ClanWarns          Int     @default(0) @db.TinyInt
+  ClanDays           Int     @default(0) @db.SmallInt
+  CarLicS            Int     @default(0) @db.SmallInt
+  FlyLicS            Int     @default(0) @db.SmallInt
+  BoatLicS           Int     @default(0) @db.SmallInt
+  GunLicS            Int     @default(0) @db.SmallInt
+  FishSkill          Int     @default(0) @db.SmallInt
+  ShowDMG            Int     @default(0) @db.TinyInt
+  EscapePoints       Int     @default(0) @db.SmallInt
+  AJail              Int     @default(0)
+  Hat                Int     @default(0)
+  ShowHat            Int     @default(0) @db.TinyInt
+  NewbieChat         Int     @default(0) @db.TinyInt
+  TogLC              Int     @default(0) @db.TinyInt
+  TogFC              Int     @default(0) @db.TinyInt
+  TogWT              Int     @default(0) @db.TinyInt
+  HidePM             Int     @default(0) @db.TinyInt
+  TogNews            Int     @default(0) @db.TinyInt
+  TogLicitatie       Int     @default(0) @db.TinyInt
+  TogClan            Int     @default(0) @db.TinyInt
+  TogEvent           Int     @default(0) @db.TinyInt
+  TogDing            Int     @default(0) @db.TinyInt
+  PhoneOnline        Int     @default(0) @db.TinyInt
+  DayLogin           Int     @default(0) @db.TinyInt
+  AW                 Int     @default(0) @db.TinyInt
+  HW                 Int     @default(0) @db.TinyInt
+  LW                 Int     @default(0) @db.TinyInt
+  Tag                Int     @default(0) @db.TinyInt
+  MatSkill           Int     @default(0) @db.SmallInt
+  PaintKills1        Int     @default(0)
+  PaintKills2        Int     @default(0)
+  PaintKills3        Int     @default(0)
+  PaintDeaths1       Int     @default(0)
+  PaintDeaths2       Int     @default(0)
+  PaintDeaths3       Int     @default(0)
+  RacePoints         Int     @default(0)
+  RacePlace1         Int     @default(0)
+  RacePlace2         Int     @default(0)
+  RacePlace3         Int     @default(0)
+  RacePlace4         Int     @default(0)
+  ArenaKills         Int     @default(0)
+  ArenaDeaths        Int     @default(0)
+  Crash              Int     @default(0)
+  PosX               Float   @default(0) @db.Float
+  PosY               Float   @default(0) @db.Float
+  PosZ               Float   @default(0) @db.Float
+  InvalidCommands    Int     @default(0)
+  Referral           Int     @default(0)
+  ReferralMoney      Int     @default(0)
+  ReferralRP         Int     @default(0)
+  SpecialQuest       String  @default("0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0") @db.VarChar(300)
+  Coins              Int     @default(0)
+  StivuitorSkill     Int     @default(0) @db.SmallInt
+  DM                 Int     @default(0)
+  Propose            String  @default("Khong ai") @db.VarChar(64)
+  WarKills           Int     @default(0)
+  WarDeaths          Int     @default(0)
+  WarTurf            Int     @default(0)
+  TogVip             Int     @default(0) @db.TinyInt
+  Fires              Int     @default(0)
+  TogSurf            Int     @default(0) @db.TinyInt
+  TogFind            Int     @default(0) @db.TinyInt
+  TogRaport          Int     @default(0) @db.TinyInt
+  TogJob             Int     @default(0) @db.TinyInt
+  TogAlert           Int     @default(0) @db.TinyInt
+  TogDice            Int     @default(0) @db.TinyInt
+  ShowCP             Int     @default(0) @db.TinyInt
+  AchievementStatus  String  @default("0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0") @db.VarChar(64)
+  WantedTime         Int     @default(0)
+  ShowProgress1      Int     @default(0)
+  ShowProgress2      Int     @default(0)
+  DailyLogin         Int     @default(0) @db.TinyInt
+  Backpack           Int     @default(0) @db.TinyInt
+  NewsPaperSkill     Int     @default(0) @db.SmallInt
+  DailyBonus         Int     @default(0) @db.TinyInt
+  IceQuest           Int     @default(0) @db.TinyInt
+  OnlineLastWeek     Int     @default(0) @db.TinyInt
+  HeadValue          Int     @default(0)
+  MechSkill          Int     @default(0) @db.SmallInt
+  DrugsSkill         Int     @default(0) @db.SmallInt
+  RobSkill           Int     @default(0) @db.MediumInt
+  pHealth            Float   @default(99) @db.Float
+  Inter              Int     @default(0) @db.UnsignedTinyInt
+  Local              Int     @default(0) @db.UnsignedMediumInt
+  LawSkill           Int     @default(0) @db.SmallInt
+  GotCode            Int     @default(0) @db.TinyInt
+  Refund             Int     @default(0) @db.TinyInt
+  FightStyle         Int     @default(0) @db.TinyInt
+  Firework           Int     @default(0) @db.UnsignedSmallInt
+  ReAp               Int     @default(0) @db.UnsignedTinyInt
+  ToySlot            Int     @default(0) @db.TinyInt
+  GangPoints         Int     @default(0)
+  FacingAngle        Float   @default(0) @db.Float
+  Newbie             Int     @default(0) @db.UnsignedTinyInt
+  JobBonus50         Int     @default(0)
+  JobBonus100        Int     @default(0)
+  Seeds              String  @default("0") @db.VarChar(50)
+  DanhHieuActive     String  @default("0") @db.VarChar(100)
+  DanhHieu           String  @default("-1") @db.VarChar(100)
+  Matuy1             Int     @default(0)
+  Matuy2             Int     @default(0)
+  Seed1              Int     @default(0)
+  Seed2              Int     @default(0)
+  ActivePoints       Int     @default(0)
+  SoMayMan           String  @default("0|0|0|0|0") @db.VarChar(50)
+  DailyMission3      Int     @default(-1)
+  Progress3          Int
+  NeedProgress3      Int
+  Skin               String  @default("250|-1|-1|-1|-1|-1|-1|-1|-1|-1|") @db.VarChar(100)
+  Crates             String  @default("0|0|0|0|0") @db.VarChar(100)
+  TimeTrongNgay      Int     @default(0)
+  DiemDanh           Int     @default(0)
+  NgayDiemDanh       Int     @default(0)
+  NhanThuongDiemDanh String  @default("0|0|0|0|0|0|0") @db.VarChar(100)
+  CasinoChip         Int     @default(0)
+  CarKey1            Int     @default(0) @db.SmallInt
+  CarKey2            Int     @default(0)
+  CarKey3            Int     @default(0) @db.SmallInt
+  CarKey4            Int     @default(0) @db.SmallInt
+  CarKey5            Int     @default(0) @db.SmallInt
+  CarKey6            Int     @default(0) @db.SmallInt
+  CarKey7            Int     @default(0) @db.SmallInt
+  CarKey8            Int     @default(0) @db.SmallInt
+  CarKey9            Int     @default(0) @db.SmallInt
+  CarKey10           Int     @default(0) @db.SmallInt
+  RewardTime         Int
+
+  @@index([id], map: "id")
+}
+
+model wcode_applications {
+  id        Int      @id @default(autoincrement())
+  UserID    Int
+  UserName  String   @db.VarChar(32)
+  FactionID Int
+  Answers   String   @db.Text
+  Questions Int
+  Status    Int
+  Date      DateTime @default(now()) @db.Timestamp(0)
+  ActionBy  String   @db.VarChar(24)
+}
+
+model wcode_commentaries {
+  ID       Int      @id @default(autoincrement())
+  UserID   Int
+  UserName String   @db.VarChar(32)
+  Skin     Int
+  Text     String   @db.Text
+  Date     DateTime @default(now()) @db.Timestamp(0)
+  Section  String   @db.VarChar(32)
+  TopicID  Int
+}
+
+model wcode_complaints {
+  ID          Int      @id @default(autoincrement())
+  UserID      Int
+  UserName    String   @db.VarChar(32)
+  AccusedID   Int
+  AccusedName String   @db.VarChar(32)
+  Text        String   @db.Text
+  Category    Int
+  Faction     Int
+  Status      Int
+  Date        DateTime @default(now()) @db.Timestamp(0)
+  ActionBy    String   @db.VarChar(32)
+}
+
+model wcode_donations {
+  ID          Int      @id @default(autoincrement())
+  Username    String   @db.VarChar(32)
+  Message     String   @db.Text
+  Amount      Int
+  CreatedAt   String   @db.VarChar(64)
+  Date        DateTime @default(now()) @db.Timestamp(0)
+  Activated   Int
+  ActivatedOn String   @db.VarChar(64)
+}
+
+model wcode_donations_logs {
+  ID       Int      @id @default(autoincrement())
+  UserID   Int
+  UserName String   @db.VarChar(32)
+  Log      String   @db.Text
+  Date     DateTime @default(now()) @db.Timestamp(0)
+  IP       String   @db.VarChar(32)
+}
+
+model wcode_editables {
+  ID      Int      @id @default(autoincrement())
+  Text    String   @db.Text
+  By      String   @db.VarChar(32)
+  Form    String   @db.VarChar(32)
+  Updated DateTime @default(now()) @db.Timestamp(0)
+}
+
+model wcode_functions {
+  ID       Int      @id @default(autoincrement())
+  UserID   Int
+  UserName String   @db.VarChar(32)
+  Tag      String   @db.VarChar(64)
+  Color    String   @db.VarChar(32)
+  Icon     String   @db.VarChar(64)
+  Date     DateTime @default(now()) @db.Timestamp(0)
+}
+
+model wcode_logs {
+  ID         Int      @id @default(autoincrement())
+  UserID     Int
+  UserName   String   @db.VarChar(32)
+  Log        String   @db.Text
+  VictimID   Int
+  VictimName String   @db.VarChar(32)
+  Date       DateTime @default(now()) @db.Timestamp(0)
+}
+
+model wcode_notifications {
+  ID           Int      @id @default(autoincrement())
+  UserID       Int
+  UserName     String   @db.VarChar(32)
+  Notification String   @db.Text
+  FromID       Int
+  FromName     String   @db.VarChar(32)
+  Seen         Int
+  Link         String   @db.Text
+  Date         DateTime @default(now()) @db.Timestamp(0)
+}
+
+model wcode_questions {
+  id        Int      @id @default(autoincrement())
+  question  String   @db.Text
+  factionid Int
+  date      DateTime @default(now()) @db.Timestamp(0)
+}
+
+model wcode_suspend {
+  ID          Int      @id
+  User        String   @db.VarChar(32)
+  Userid      Int
+  Admin       String   @db.VarChar(32)
+  Adminid     Int
+  Days        Int
+  Date        DateTime @default(now()) @db.Timestamp(0)
+  Date_unix   Int
+  Expire_unix Int
+  Expire      String   @db.VarChar(32)
+  Reason      String   @db.VarChar(64)
+}
+
+model wcode_tickets {
+  ID       Int      @id @default(autoincrement())
+  UserID   Int
+  UserName String   @db.VarChar(32)
+  Category String   @db.VarChar(64)
+  Text     String   @db.Text
+  Status   Int
+  Date     DateTime @default(now()) @db.Timestamp(0)
+  ActionBy String   @db.VarChar(32)
+}
+
+model wcode_unban {
+  ID         Int      @id @default(autoincrement())
+  UserID     Int
+  UserName   String   @db.VarChar(32)
+  BanDetails String   @db.Text
+  Title      String   @db.VarChar(32)
+  Details    String   @db.Text
+  Status     Int
+  Date       DateTime @default(now()) @db.Timestamp(0)
+  ActionBy   String   @default("Banned") @db.VarChar(32)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model youtubevideos {
+  ID        Int
+  Title     String   @db.Text
+  Accepted  Int
+  Time      DateTime @default(now()) @db.Timestamp(0)
+  Name      Int
+  AdminName String   @db.Text
+  Link      String   @db.Text
+  Miniatura String   @db.Text
+
+  @@ignore
 }
