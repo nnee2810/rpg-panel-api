@@ -6,31 +6,31 @@ import { UsersService } from "./users.service"
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get("profile")
+  @Get("get-profile")
   getProfile(@Req() req: RequestWithUser) {
     const {
       id,
       name,
+      Level,
+      Respect,
       Admin,
       Helper,
       Status,
       Banned,
       BReason,
-      Model,
-      Vip,
-      Premium,
+      PremiumPoints,
     } = req.user
     return {
       id,
       name,
+      Level,
+      Respect,
       Admin,
       Helper,
       Status,
       Banned,
       BReason,
-      Model,
-      Vip,
-      Premium,
+      PremiumPoints,
     }
   }
 }

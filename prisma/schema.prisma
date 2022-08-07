@@ -9,7 +9,7 @@ datasource db {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model apartaments {
-  ID     Int
+  ID     Int    @id @unique(map: "ID")
   X      Float  @db.Float
   Y      Float  @db.Float
   Z      Float  @db.Float
@@ -18,8 +18,6 @@ model apartaments {
   Value  Int
   Lock   Int
   Owner  String @db.VarChar(25)
-
-  @@ignore
 }
 
 model badges {
@@ -476,14 +474,12 @@ model leadhelp_req {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model logs {
-  ID     Int
+  ID     Int    @id @unique(map: "ID") @default(autoincrement())
   Userid Int
   Text   String @db.VarChar(180)
   Date   String @db.VarChar(256)
   Type   Int
   IP     String @db.VarChar(256)
-
-  @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
