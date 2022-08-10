@@ -26,20 +26,57 @@ export class StatisticService {
     }
   }
 
-  async getOnline() {
+  async getTopLevel() {
     try {
       const users = await this.prismaService.users.findMany({
         select: {
           id: true,
           name: true,
           Level: true,
-          Member: true,
-          Job: true,
+          Status: true,
+          lastOn: true,
+        },
+        orderBy: {
+          Level: "desc",
+        },
+        take: 10,
+      })
+      return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message || error?.detail)
+    }
+  }
+
+  async getTopRich() {
+    try {
+      const users = await this.prismaService
+        .$queryRaw`SELECT id, name, Status, lastOn, (Bank + Money) as totalMoney FROM users ORDER BY totalMoney DESC LIMIT 10`
+      return JSON.parse(
+        JSON.stringify(
+          users,
+          (key, value) =>
+            typeof value === "bigint" ? value.toString() : value, // return everything else unchanged
+        ),
+      )
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message || error?.detail)
+    }
+  }
+
+  async getTopConnectedTime() {
+    try {
+      const users = await this.prismaService.users.findMany({
+        select: {
+          id: true,
+          name: true,
+          Status: true,
+          lastOn: true,
           ConnectedTime: true,
         },
-        where: {
-          Status: 1,
+        orderBy: {
+          ConnectedTime: "desc",
         },
+        take: 10,
       })
       return users
     } catch (error) {

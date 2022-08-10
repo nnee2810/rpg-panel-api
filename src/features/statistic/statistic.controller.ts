@@ -11,9 +11,21 @@ export class StatisticController {
     return overview
   }
 
-  @Get("online")
-  async getOnline() {
-    const users = await this.statisticService.getOnline()
+  @Get("top-level")
+  async getTopLevel() {
+    const users = await this.statisticService.getTopLevel()
+    return users
+  }
+
+  @Get("top-rich")
+  async getTopRich() {
+    const users = await this.statisticService.getTopRich()
+    return users
+  }
+
+  @Get("top-connected-time")
+  async getTopConnectedTime() {
+    const users = await this.statisticService.getTopConnectedTime()
     return users
   }
 }
