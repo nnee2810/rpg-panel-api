@@ -10,4 +10,10 @@ export class StatisticController {
     const overview = await this.statisticService.getOverview()
     return overview
   }
+
+  @Get("online")
+  async getOnline() {
+    const users = await this.statisticService.getOnline()
+    return users
+  }
 }

@@ -25,4 +25,25 @@ export class StatisticService {
       throw new InternalServerErrorException(error?.message || error?.detail)
     }
   }
+
+  async getOnline() {
+    try {
+      const users = await this.prismaService.users.findMany({
+        select: {
+          id: true,
+          name: true,
+          Level: true,
+          Member: true,
+          Job: true,
+          ConnectedTime: true,
+        },
+        where: {
+          Status: 1,
+        },
+      })
+      return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message || error?.detail)
+    }
+  }
 }
