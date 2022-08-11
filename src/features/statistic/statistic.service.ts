@@ -7,12 +7,14 @@ export class StatisticService {
 
   async getOverview() {
     try {
-      const users = await this.prismaService.users.findMany()
-      const registered = users.length
-      const online = users.filter((user) => user.Status).length
-      const apartaments = (await this.prismaService.apartaments.findMany())
-        .length
-      const bizz = (await this.prismaService.bizz.findMany()).length
+      const registered = await this.prismaService.users.count()
+      const online = await this.prismaService.users.count({
+        where: {
+          Status: 1,
+        },
+      })
+      const apartaments = await this.prismaService.apartaments.count()
+      const bizz = await this.prismaService.bizz.count()
       const faction_logs = await this.prismaService.faction_logs.findMany({
         orderBy: {
           id: "desc",
