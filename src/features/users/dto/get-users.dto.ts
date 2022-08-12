@@ -1,7 +1,8 @@
 import { Type } from "class-transformer"
 import { IsBoolean, IsNumber, IsOptional, IsString, Min } from "class-validator"
+import { PaginationDto } from "src/dto"
 
-export class GetUsersDto {
+export class GetUsersDto extends PaginationDto {
   @IsOptional()
   @IsString()
   name?: string

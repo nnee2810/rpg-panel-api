@@ -9,8 +9,8 @@ export class UsersController {
 
   @Get()
   async getUsers(@Query() query: GetUsersDto) {
-    const users = this.usersService.getUsers(query)
-    return users
+    const paginateUsers = await this.usersService.getUsers(query)
+    return paginateUsers
   }
 
   @Get("profile")
