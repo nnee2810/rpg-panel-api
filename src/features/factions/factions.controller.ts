@@ -1,4 +1,5 @@
-import { Controller, Get } from "@nestjs/common"
+import { Controller, Get, Query } from "@nestjs/common"
+import { PaginationDto } from "src/dto"
 import { FactionsService } from "./factions.service"
 
 @Controller("factions")
@@ -6,8 +7,8 @@ export class FactionsController {
   constructor(private factionsService: FactionsService) {}
 
   @Get()
-  async getFactions() {
-    const factions = await this.factionsService.getFactions()
+  async getFactions(@Query() query: PaginationDto) {
+    const factions = await this.factionsService.findAll(query)
     return factions
   }
 }

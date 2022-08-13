@@ -7,9 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model apartaments {
-  ID     Int    @id @unique(map: "ID")
+  ID     Int    @id @default(autoincrement())
   X      Float  @db.Float
   Y      Float  @db.Float
   Z      Float  @db.Float
@@ -280,12 +279,12 @@ model faction_apply {
 }
 
 model faction_logs {
-  id      Int    @id @default(autoincrement())
+  id      Int      @id @default(autoincrement())
   player  Int
   leader  Int
-  Text    String @db.Text
-  time    String @default(dbgenerated("(current_timestamp())")) @db.Text
-  Deleted Int    @db.SmallInt
+  Text    String   @db.Text
+  time    DateTime @default(now()) @db.Timestamp(0)
+  Deleted Int      @db.SmallInt
 }
 
 model factionlog {
@@ -474,12 +473,14 @@ model leadhelp_req {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model logs {
-  ID     Int    @id @unique(map: "ID") @default(autoincrement())
+  ID     Int
   Userid Int
   Text   String @db.VarChar(180)
   Date   String @db.VarChar(256)
   Type   Int
   IP     String @db.VarChar(256)
+
+  @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
@@ -984,7 +985,7 @@ model users {
   Level              Int     @default(1) @db.UnsignedSmallInt
   Bank               BigInt  @default(0) @db.UnsignedBigInt
   Money              BigInt  @default(0) @db.UnsignedBigInt
-  id                 Int     @id @unique(map: "id_2") @default(autoincrement()) @db.UnsignedSmallInt
+  id                 Int     @id @unique(map: "id") @default(autoincrement()) @db.UnsignedSmallInt
   name               String  @db.VarChar(25)
   password           String  @db.VarChar(50)
   Security           String  @default("no") @db.VarChar(30)
@@ -1255,8 +1256,6 @@ model users {
   CarKey9            Int     @default(0) @db.SmallInt
   CarKey10           Int     @default(0) @db.SmallInt
   RewardTime         Int
-
-  @@index([id], map: "id")
 }
 
 model wcode_applications {

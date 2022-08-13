@@ -3,31 +3,32 @@ import { PaginationDto } from "src/dto"
 import { PrismaService } from "../prisma/prisma.service"
 
 @Injectable()
-export class FactionsService {
+export class ClansService {
   constructor(private prismaService: PrismaService) {}
 
   async findAll({ page, take }: PaginationDto) {
     try {
       const [data, total] = await this.prismaService.$transaction([
-        this.prismaService.factions.findMany({
+        this.prismaService.clans.findMany({
           select: {
             ID: true,
             Name: true,
+            Tag: true,
+            Owner: true,
+            Color: true,
             Slots: true,
-            Level: true,
-            App: true,
+            RegisterDate: true,
           },
           skip: (page - 1) * take,
           take,
         }),
-        this.prismaService.factions.count(),
+        this.prismaService.clans.count(),
       ])
-
       const membersPromises = []
       for (let i = 0; i < data.length; i++)
         membersPromises.push(
           this.prismaService.users.count({
-            where: { Member: data[i].ID },
+            where: { Clan: data[i].ID },
           }),
         )
       const members = await Promise.all(membersPromises)

@@ -4,6 +4,7 @@ import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
 import { AuthModule } from "./features/auth/auth.module"
 import { AdminGuard, JwtGuard } from "./features/auth/guards"
+import { ClansModule } from "./features/clans/clans.module"
 import { FactionsModule } from "./features/factions/factions.module"
 import { PrismaModule } from "./features/prisma/prisma.module"
 import { PrismaService } from "./features/prisma/prisma.service"
@@ -17,6 +18,7 @@ import { UsersModule } from "./features/users/users.module"
     UsersModule,
     StatisticModule,
     FactionsModule,
+    ClansModule,
   ],
   controllers: [AppController],
   providers: [

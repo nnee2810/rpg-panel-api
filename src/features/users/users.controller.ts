@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Req } from "@nestjs/common"
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+  Req,
+} from "@nestjs/common"
 import { RequestWithUser } from "src/interfaces"
 import { GetUsersDto } from "./dto"
 import { UsersService } from "./users.service"
@@ -9,7 +16,7 @@ export class UsersController {
 
   @Get()
   async getUsers(@Query() query: GetUsersDto) {
-    const paginateUsers = await this.usersService.getUsers(query)
+    const paginateUsers = await this.usersService.findAll(query)
     return paginateUsers
   }
 
@@ -41,5 +48,12 @@ export class UsersController {
       BReason,
       PremiumPoints,
     }
+  }
+
+  @Get("profile/:name")
+  async getUserByName(@Param("name") name: string) {
+    const user = await this.usersService.findByName(name)
+    if (!user) throw new NotFoundException("Người chơi không tồn tại")
+    return user
   }
 }

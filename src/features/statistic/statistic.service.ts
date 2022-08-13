@@ -24,7 +24,7 @@ export class StatisticService {
 
       return { online, registered, apartaments, bizz, faction_logs }
     } catch (error) {
-      throw new InternalServerErrorException(error?.message || error?.detail)
+      throw new InternalServerErrorException(error?.message)
     }
   }
 
@@ -45,7 +45,7 @@ export class StatisticService {
       })
       return users
     } catch (error) {
-      throw new InternalServerErrorException(error?.message || error?.detail)
+      throw new InternalServerErrorException(error?.message)
     }
   }
 
@@ -61,7 +61,7 @@ export class StatisticService {
         ),
       )
     } catch (error) {
-      throw new InternalServerErrorException(error?.message || error?.detail)
+      throw new InternalServerErrorException(error?.message)
     }
   }
 
@@ -82,7 +82,7 @@ export class StatisticService {
       })
       return users
     } catch (error) {
-      throw new InternalServerErrorException(error?.message || error?.detail)
+      throw new InternalServerErrorException(error?.message)
     }
   }
 }

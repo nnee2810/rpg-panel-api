@@ -6,7 +6,7 @@ import { GetUsersDto } from "./dto"
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async getUsers({ page = 1, take = 20, ...query }: GetUsersDto) {
+  async findAll({ page, take, ...query }: GetUsersDto) {
     try {
       const where: Prisma.usersWhereInput = {
         name: {
@@ -63,7 +63,19 @@ export class UsersService {
         take,
       }
     } catch (error) {
-      throw new InternalServerErrorException(error?.message || error?.detail)
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  async findByName(name: string) {
+    try {
+      const user = await this.prismaService.users.findFirst({
+        select: { id: true, name: true, Level: true, PhoneNr: true },
+        where: { name },
+      })
+      return user
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
     }
   }
 }
