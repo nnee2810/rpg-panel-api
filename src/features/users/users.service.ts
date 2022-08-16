@@ -102,19 +102,13 @@ export class UsersService {
         const clan = await this.prismaService.clans.findUnique({
           where: { ID: user.Clan },
         })
-        if (clan) user["ClanName"] = clan.Name
+        if (clan) user["clan"] = clan
       }
       if (user.Job) {
         const job = await this.prismaService.jobs.findUnique({
           where: { ID: user.Job },
         })
         if (job) user["JobName"] = job.Name
-      }
-      if (user.Referral) {
-        const referral = await this.prismaService.users.findUnique({
-          where: { id: user.Referral },
-        })
-        if (referral) user["ReferralName"] = referral.name
       }
 
       return user

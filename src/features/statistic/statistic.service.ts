@@ -13,7 +13,7 @@ export class StatisticService {
           Status: 1,
         },
       })
-      const apartaments = await this.prismaService.apartaments.count()
+      const houses = await this.prismaService.houses.count()
       const bizz = await this.prismaService.bizz.count()
       const faction_logs = await this.prismaService.faction_logs.findMany({
         orderBy: {
@@ -22,7 +22,7 @@ export class StatisticService {
         take: 10,
       })
 
-      return { online, registered, apartaments, bizz, faction_logs }
+      return { online, registered, houses, bizz, faction_logs }
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

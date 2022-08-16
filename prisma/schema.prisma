@@ -8,7 +8,7 @@ datasource db {
 }
 
 model apartaments {
-  ID     Int    @id @default(autoincrement())
+  ID     Int    @id @unique(map: "ID") @default(autoincrement())
   X      Float  @db.Float
   Y      Float  @db.Float
   Z      Float  @db.Float
@@ -177,16 +177,6 @@ model codes {
   Ore   Int?
 }
 
-model comm_req {
-  Comm_Type   Int
-  Comm_UserID Int
-  Comm_Comm   String   @db.Text
-  Comm_Topic  Int
-  Comm_Time   DateTime @default(now()) @db.Timestamp(0)
-  Model       Int
-  ID          Int      @id @default(autoincrement())
-}
-
 model commands {
   ID     Int      @id @default(autoincrement())
   Name   String   @db.VarChar(100)
@@ -201,36 +191,6 @@ model commentaries {
   Time     DateTime @default(now()) @db.Timestamp(0)
   Category Int
   Cat_id   Int
-}
-
-model complaints {
-  ID        Int    @id @default(autoincrement())
-  Username  String @db.Text
-  UsernameR String @db.Text
-  Type      Int
-  Reason    Int
-  Proofs    String @db.Text
-  Details   String @db.Text
-  Status    Int    @default(0)
-  Message   String @default("") @db.VarChar(255)
-  Date      Int    @default(0)
-}
-
-model complaints_comments {
-  ID          Int    @id @default(autoincrement())
-  Username    String @db.Text
-  Text        String @db.Text
-  Date        Int
-  ComplaintID Int
-
-  @@map("complaints-comments")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model cursewords {
-  word String? @db.TinyText
-
-  @@ignore
 }
 
 model dscars {
@@ -254,28 +214,6 @@ model emails {
   Date      String @db.VarChar(256)
   Read      Int    @default(0)
   LinkPanel String @default("") @db.VarChar(255)
-}
-
-model faction_apply {
-  ID        Int    @id @default(autoincrement())
-  FactionID Int
-  Username  String @db.Text
-  Status    Int    @default(1)
-  I1        String @db.Text
-  I2        String @db.Text
-  I3        String @db.Text
-  I4        String @db.Text
-  I5        String @db.Text
-  I6        String @db.Text
-  I7        String @db.Text
-  I8        String @db.Text
-  I9        String @db.Text
-  I10       String @db.Text
-  I11       String @db.Text
-  I12       String @db.Text
-  I13       String @db.Text
-  I14       String @db.Text
-  I15       String @db.Text
 }
 
 model faction_logs {
@@ -354,7 +292,7 @@ model friends {
 model ghidanh_boxing {
   ID     Int       @id @default(autoincrement())
   Userid Int?
-  Time   DateTime? @default(now()) @db.DateTime(0)
+  Time   DateTime? @default(now()) @db.Timestamp(0)
   Type   Int?      @default(0) @db.SmallInt
   Name   String?   @default("0") @db.VarChar(50)
 }
@@ -389,20 +327,6 @@ model houses {
   gExtX        Float  @default(0) @db.Float
   gExtY        Float  @default(0) @db.Float
   gExtZ        Float  @default(0) @db.Float
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model inf_complaints {
-  complaint_id          Int
-  complaint_user        Int
-  complaint_against     Int
-  complaint_reason      String   @db.Text
-  complaint_proof       String   @db.Text
-  complaint_description String   @db.Text
-  complaint_status      Int
-  created_at            DateTime @default(now()) @db.Timestamp(0)
-
-  @@ignore
 }
 
 model inventory_items {
@@ -892,37 +816,6 @@ model svehicles {
   vID         Int    @id @default(autoincrement())
 }
 
-model tickets {
-  ID          Int    @id @default(autoincrement())
-  Username    String @db.Text
-  Type        String @db.Text
-  Status      Int
-  Priority    String @db.Text
-  Description String @db.Text
-  Date        String @db.Text
-}
-
-model tickets_comments {
-  ID       Int    @id @default(autoincrement())
-  Username String @db.Text
-  Text     String @db.Text
-  Date     Int
-  TicketID Int
-
-  @@map("tickets-comments")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model tickets_panel {
-  ID       Int
-  Nickname Int
-  Ticket   String   @db.Text
-  Status   Int
-  Created  DateTime @default(now()) @db.Timestamp(0)
-
-  @@ignore
-}
-
 model transferlog {
   ID    Int    @id @default(autoincrement())
   ip1   String @db.VarChar(64)
@@ -942,32 +835,6 @@ model turfs {
   MinY  Float  @db.Float
   MaxX  Float  @db.Float
   MaxY  Float  @db.Float
-}
-
-model unban_panel {
-  ID          Int    @id @default(autoincrement())
-  Username    String @db.Text
-  Status      Int    @default(0)
-  Reason      String @db.Text
-  Poza        String @db.Text
-  Description String @db.Text
-  Date        String @db.Text
-  Now         Int    @default(0)
-
-  @@map("unban-panel")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model unban_req {
-  ID          Int
-  User_ID     Int
-  User_Desc   String   @db.Text
-  User_Dove   String   @db.Text
-  User_Ban    String   @db.Text
-  User_Time   DateTime @default(now()) @db.Timestamp(0)
-  User_Status Int
-
-  @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
@@ -1256,159 +1123,4 @@ model users {
   CarKey9            Int     @default(0) @db.SmallInt
   CarKey10           Int     @default(0) @db.SmallInt
   RewardTime         Int
-}
-
-model wcode_applications {
-  id        Int      @id @default(autoincrement())
-  UserID    Int
-  UserName  String   @db.VarChar(32)
-  FactionID Int
-  Answers   String   @db.Text
-  Questions Int
-  Status    Int
-  Date      DateTime @default(now()) @db.Timestamp(0)
-  ActionBy  String   @db.VarChar(24)
-}
-
-model wcode_commentaries {
-  ID       Int      @id @default(autoincrement())
-  UserID   Int
-  UserName String   @db.VarChar(32)
-  Skin     Int
-  Text     String   @db.Text
-  Date     DateTime @default(now()) @db.Timestamp(0)
-  Section  String   @db.VarChar(32)
-  TopicID  Int
-}
-
-model wcode_complaints {
-  ID          Int      @id @default(autoincrement())
-  UserID      Int
-  UserName    String   @db.VarChar(32)
-  AccusedID   Int
-  AccusedName String   @db.VarChar(32)
-  Text        String   @db.Text
-  Category    Int
-  Faction     Int
-  Status      Int
-  Date        DateTime @default(now()) @db.Timestamp(0)
-  ActionBy    String   @db.VarChar(32)
-}
-
-model wcode_donations {
-  ID          Int      @id @default(autoincrement())
-  Username    String   @db.VarChar(32)
-  Message     String   @db.Text
-  Amount      Int
-  CreatedAt   String   @db.VarChar(64)
-  Date        DateTime @default(now()) @db.Timestamp(0)
-  Activated   Int
-  ActivatedOn String   @db.VarChar(64)
-}
-
-model wcode_donations_logs {
-  ID       Int      @id @default(autoincrement())
-  UserID   Int
-  UserName String   @db.VarChar(32)
-  Log      String   @db.Text
-  Date     DateTime @default(now()) @db.Timestamp(0)
-  IP       String   @db.VarChar(32)
-}
-
-model wcode_editables {
-  ID      Int      @id @default(autoincrement())
-  Text    String   @db.Text
-  By      String   @db.VarChar(32)
-  Form    String   @db.VarChar(32)
-  Updated DateTime @default(now()) @db.Timestamp(0)
-}
-
-model wcode_functions {
-  ID       Int      @id @default(autoincrement())
-  UserID   Int
-  UserName String   @db.VarChar(32)
-  Tag      String   @db.VarChar(64)
-  Color    String   @db.VarChar(32)
-  Icon     String   @db.VarChar(64)
-  Date     DateTime @default(now()) @db.Timestamp(0)
-}
-
-model wcode_logs {
-  ID         Int      @id @default(autoincrement())
-  UserID     Int
-  UserName   String   @db.VarChar(32)
-  Log        String   @db.Text
-  VictimID   Int
-  VictimName String   @db.VarChar(32)
-  Date       DateTime @default(now()) @db.Timestamp(0)
-}
-
-model wcode_notifications {
-  ID           Int      @id @default(autoincrement())
-  UserID       Int
-  UserName     String   @db.VarChar(32)
-  Notification String   @db.Text
-  FromID       Int
-  FromName     String   @db.VarChar(32)
-  Seen         Int
-  Link         String   @db.Text
-  Date         DateTime @default(now()) @db.Timestamp(0)
-}
-
-model wcode_questions {
-  id        Int      @id @default(autoincrement())
-  question  String   @db.Text
-  factionid Int
-  date      DateTime @default(now()) @db.Timestamp(0)
-}
-
-model wcode_suspend {
-  ID          Int      @id
-  User        String   @db.VarChar(32)
-  Userid      Int
-  Admin       String   @db.VarChar(32)
-  Adminid     Int
-  Days        Int
-  Date        DateTime @default(now()) @db.Timestamp(0)
-  Date_unix   Int
-  Expire_unix Int
-  Expire      String   @db.VarChar(32)
-  Reason      String   @db.VarChar(64)
-}
-
-model wcode_tickets {
-  ID       Int      @id @default(autoincrement())
-  UserID   Int
-  UserName String   @db.VarChar(32)
-  Category String   @db.VarChar(64)
-  Text     String   @db.Text
-  Status   Int
-  Date     DateTime @default(now()) @db.Timestamp(0)
-  ActionBy String   @db.VarChar(32)
-}
-
-model wcode_unban {
-  ID         Int      @id @default(autoincrement())
-  UserID     Int
-  UserName   String   @db.VarChar(32)
-  BanDetails String   @db.Text
-  Title      String   @db.VarChar(32)
-  Details    String   @db.Text
-  Status     Int
-  Date       DateTime @default(now()) @db.Timestamp(0)
-  ActionBy   String   @default("Banned") @db.VarChar(32)
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model youtubevideos {
-  ID        Int
-  Title     String   @db.Text
-  Accepted  Int
-  Time      DateTime @default(now()) @db.Timestamp(0)
-  Name      Int
-  AdminName String   @db.Text
-  Link      String   @db.Text
-  Miniatura String   @db.Text
-
-  @@ignore
 }
