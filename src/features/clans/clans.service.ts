@@ -25,10 +25,10 @@ export class ClansService {
         this.prismaService.clans.count(),
       ])
       const membersPromises = []
-      for (let i = 0; i < data.length; i++)
+      for (const clan of data)
         membersPromises.push(
           this.prismaService.users.count({
-            where: { Clan: data[i].ID },
+            where: { Clan: clan.ID },
           }),
         )
       const members = await Promise.all(membersPromises)

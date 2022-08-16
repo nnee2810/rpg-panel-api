@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common"
 import { Prisma } from "@prisma/client"
 import { PrismaService } from "../prisma/prisma.service"
 import { GetUsersDto } from "./dto"
@@ -70,9 +74,49 @@ export class UsersService {
   async findByName(name: string) {
     try {
       const user = await this.prismaService.users.findFirst({
-        select: { id: true, name: true, Level: true, PhoneNr: true },
+        select: {
+          id: true,
+          name: true,
+          Status: true,
+          Premium: true,
+          Vip: true,
+          Level: true,
+          Respect: true,
+          Member: true,
+          Rank: true,
+          Clan: true,
+          ClanRank: true,
+          Job: true,
+          PhoneNr: true,
+          FPunish: true,
+          Warns: true,
+          ConnectedTime: true,
+          lastOn: true,
+          RegisterDate: true,
+          Referral: true,
+        },
         where: { name },
       })
+      if (!user) throw new NotFoundException("Người chơi không tồn tại")
+      if (user.Clan) {
+        const clan = await this.prismaService.clans.findUnique({
+          where: { ID: user.Clan },
+        })
+        if (clan) user["ClanName"] = clan.Name
+      }
+      if (user.Job) {
+        const job = await this.prismaService.jobs.findUnique({
+          where: { ID: user.Job },
+        })
+        if (job) user["JobName"] = job.Name
+      }
+      if (user.Referral) {
+        const referral = await this.prismaService.users.findUnique({
+          where: { id: user.Referral },
+        })
+        if (referral) user["ReferralName"] = referral.name
+      }
+
       return user
     } catch (error) {
       throw new InternalServerErrorException(error?.message)

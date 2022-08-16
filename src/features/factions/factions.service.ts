@@ -24,10 +24,10 @@ export class FactionsService {
       ])
 
       const membersPromises = []
-      for (let i = 0; i < data.length; i++)
+      for (const faction of data)
         membersPromises.push(
           this.prismaService.users.count({
-            where: { Member: data[i].ID },
+            where: { Member: faction.ID },
           }),
         )
       const members = await Promise.all(membersPromises)

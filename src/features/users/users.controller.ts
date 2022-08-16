@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query,
-  Req,
-} from "@nestjs/common"
+import { Controller, Get, Param, Query, Req } from "@nestjs/common"
 import { RequestWithUser } from "src/interfaces"
 import { GetUsersDto } from "./dto"
 import { UsersService } from "./users.service"
@@ -53,7 +46,6 @@ export class UsersController {
   @Get("profile/:name")
   async getUserByName(@Param("name") name: string) {
     const user = await this.usersService.findByName(name)
-    if (!user) throw new NotFoundException("Người chơi không tồn tại")
     return user
   }
 }
