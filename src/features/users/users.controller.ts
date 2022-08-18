@@ -9,12 +9,12 @@ export class UsersController {
 
   @Get()
   async getUsers(@Query() query: GetUsersDto) {
-    const paginateUsers = await this.usersService.findAll(query)
+    const paginateUsers = await this.usersService.getAll(query)
     return paginateUsers
   }
 
   @Get("profile")
-  getProfile(@Req() req: RequestWithUser) {
+  getUser(@Req() req: RequestWithUser) {
     const {
       id,
       name,
@@ -44,8 +44,14 @@ export class UsersController {
   }
 
   @Get("profile/:name")
-  async getUserByName(@Param("name") name: string) {
-    const user = await this.usersService.findByName(name)
+  async getUserProfile(@Param("name") name: string) {
+    const user = await this.usersService.getProfile(name)
     return user
+  }
+
+  @Get("profile/:name/properties")
+  async getUserProperties(@Param("name") name: string) {
+    const properties = await this.usersService.getProperties(name)
+    return properties
   }
 }

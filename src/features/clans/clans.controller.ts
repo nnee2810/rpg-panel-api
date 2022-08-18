@@ -8,7 +8,7 @@ export class ClansController {
 
   @Get()
   async getClans(@Query() query: PaginationDto) {
-    const clans = await this.clansService.findAll(query)
+    const clans = await this.clansService.getAll(query)
     return clans
   }
 }

@@ -8,7 +8,7 @@ export class FactionsController {
 
   @Get()
   async getFactions(@Query() query: PaginationDto) {
-    const factions = await this.factionsService.findAll(query)
+    const factions = await this.factionsService.getAll(query)
     return factions
   }
 }

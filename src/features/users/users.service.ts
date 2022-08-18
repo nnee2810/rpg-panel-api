@@ -4,13 +4,14 @@ import {
   NotFoundException,
 } from "@nestjs/common"
 import { Prisma } from "@prisma/client"
+import { toJSON } from "src/utils"
 import { PrismaService } from "../prisma/prisma.service"
 import { GetUsersDto } from "./dto"
 @Injectable()
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async findAll({ page, take, ...query }: GetUsersDto) {
+  async getAll({ page, take, ...query }: GetUsersDto) {
     try {
       const where: Prisma.usersWhereInput = {
         name: {
@@ -71,7 +72,7 @@ export class UsersService {
     }
   }
 
-  async findByName(name: string) {
+  async getProfile(name: string) {
     try {
       const user = await this.prismaService.users.findFirst({
         select: {
@@ -104,14 +105,46 @@ export class UsersService {
         })
         if (clan) user["clan"] = clan
       }
-      if (user.Job) {
-        const job = await this.prismaService.jobs.findUnique({
-          where: { ID: user.Job },
-        })
-        if (job) user["JobName"] = job.Name
-      }
 
       return user
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  async getProperties(name: string) {
+    try {
+      const vehicles = await this.prismaService.cars.findMany({
+        where: { Owner: name },
+      })
+      const house = await this.prismaService.houses.findFirst({
+        select: {
+          ID: true,
+          Discription: true,
+          Value: true,
+          Rent: true,
+          Rentabil: true,
+          Lockk: true,
+        },
+        where: {
+          Owner: name,
+        },
+      })
+      const bizz = toJSON(
+        await this.prismaService.bizz.findFirst({
+          select: {
+            ID: true,
+            Message: true,
+            BuyPrice: true,
+            EntranceCost: true,
+            Locked: true,
+          },
+          where: {
+            Owner: name,
+          },
+        }),
+      )
+      return { vehicles, house, bizz }
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

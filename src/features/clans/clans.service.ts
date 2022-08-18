@@ -6,7 +6,7 @@ import { PrismaService } from "../prisma/prisma.service"
 export class ClansService {
   constructor(private prismaService: PrismaService) {}
 
-  async findAll({ page, take }: PaginationDto) {
+  async getAll({ page, take }: PaginationDto) {
     try {
       const [data, total] = await this.prismaService.$transaction([
         this.prismaService.clans.findMany({
