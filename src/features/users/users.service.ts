@@ -72,7 +72,7 @@ export class UsersService {
     }
   }
 
-  async getProfile(name: string) {
+  async getProfileByName(name: string) {
     try {
       const user = await this.prismaService.users.findFirst({
         select: {
@@ -112,7 +112,7 @@ export class UsersService {
     }
   }
 
-  async getProperties(name: string) {
+  async getPropertiesByName(name: string) {
     try {
       const vehicles = await this.prismaService.cars.findMany({
         where: { Owner: name },
@@ -145,6 +145,19 @@ export class UsersService {
         }),
       )
       return { vehicles, house, bizz }
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  async updateByName(name: string, data: Prisma.usersUpdateInput) {
+    try {
+      await this.prismaService.users.updateMany({
+        data,
+        where: {
+          name,
+        },
+      })
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

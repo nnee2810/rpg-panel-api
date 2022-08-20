@@ -43,4 +43,79 @@ export class FactionsService {
       throw new InternalServerErrorException(error?.message)
     }
   }
+
+  async getOverview(id: string) {
+    try {
+      const faction = await this.prismaService.factions.findUnique({
+        select: {
+          ID: true,
+          Name: true,
+          Anunt: true,
+          Name1: true,
+          Name2: true,
+          Name3: true,
+          Name4: true,
+          Name5: true,
+          Name6: true,
+          Name7: true,
+          App: true,
+          Lock: true,
+        },
+        where: { ID: +id },
+      })
+      if (faction)
+        faction["Leader"] = await this.prismaService.users.findFirst({
+          select: {
+            name: true,
+            Status: true,
+          },
+          where: {
+            Leader: +id,
+          },
+        })
+
+      return faction
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  async getMembers(id: string, { page, take }: PaginationDto) {
+    try {
+      const [data, total] = await this.prismaService.$transaction([
+        this.prismaService.users.findMany({
+          select: {
+            id: true,
+            name: true,
+            Rank: true,
+            FWarn: true,
+            Days: true,
+            Status: true,
+            lastOn: true,
+          },
+          where: {
+            Member: +id,
+          },
+          skip: (page - 1) * take,
+          take,
+          orderBy: {
+            Rank: "desc",
+          },
+        }),
+        this.prismaService.users.count({
+          where: {
+            Member: +id,
+          },
+        }),
+      ])
+      return {
+        data,
+        total,
+        page,
+        take,
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
 }
