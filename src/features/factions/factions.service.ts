@@ -44,7 +44,7 @@ export class FactionsService {
     }
   }
 
-  async getOverview(id: string) {
+  async getOverview(id: number) {
     try {
       const faction = await this.prismaService.factions.findUnique({
         select: {
@@ -61,7 +61,7 @@ export class FactionsService {
           App: true,
           Lock: true,
         },
-        where: { ID: +id },
+        where: { ID: id },
       })
       if (faction)
         faction["Leader"] = await this.prismaService.users.findFirst({
@@ -70,7 +70,7 @@ export class FactionsService {
             Status: true,
           },
           where: {
-            Leader: +id,
+            Leader: id,
           },
         })
 
@@ -80,7 +80,7 @@ export class FactionsService {
     }
   }
 
-  async getMembers(id: string, { page, take }: PaginationDto) {
+  async getMembers(id: number, { page, take }: PaginationDto) {
     try {
       const [data, total] = await this.prismaService.$transaction([
         this.prismaService.users.findMany({

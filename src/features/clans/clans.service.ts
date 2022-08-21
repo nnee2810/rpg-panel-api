@@ -44,4 +44,52 @@ export class ClansService {
       throw new InternalServerErrorException(error?.message)
     }
   }
+
+  async getOverview(id: number) {
+    try {
+      const clan = await this.prismaService.clans.findUnique({
+        where: {
+          ID: id,
+        },
+      })
+      return clan
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  async getMembers(id: number, { page, take }: PaginationDto) {
+    try {
+      const [data, total] = await this.prismaService.$transaction([
+        this.prismaService.users.findMany({
+          select: {
+            id: true,
+            name: true,
+            ClanRank: true,
+            ClanWarns: true,
+            ClanDays: true,
+            Status: true,
+            lastOn: true,
+          },
+          where: {
+            Clan: id,
+          },
+          orderBy: {
+            ClanRank: "desc",
+          },
+          skip: (page - 1) * take,
+          take,
+        }),
+        this.prismaService.users.count({ where: { Clan: id } }),
+      ])
+      return {
+        data,
+        total,
+        page,
+        take,
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
 }

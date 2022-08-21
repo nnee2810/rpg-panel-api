@@ -3,6 +3,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Query,
 } from "@nestjs/common"
 import { PaginationDto } from "src/dto"
@@ -19,7 +20,7 @@ export class FactionsController {
   }
 
   @Get(":id/overview")
-  async getFactionOverview(@Param("id") id: string) {
+  async getFactionOverview(@Param("id", ParseIntPipe) id: number) {
     const faction = await this.factionsService.getOverview(id)
     if (!faction) throw new NotFoundException()
     return faction
@@ -27,7 +28,7 @@ export class FactionsController {
 
   @Get(":id/members")
   async getFactionMembers(
-    @Param("id") id: string,
+    @Param("id", ParseIntPipe) id: number,
     @Query() query: PaginationDto,
   ) {
     const members = await this.factionsService.getMembers(id, query)
