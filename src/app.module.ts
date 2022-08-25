@@ -2,14 +2,15 @@ import { Module } from "@nestjs/common"
 import { APP_GUARD } from "@nestjs/core"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
-import { AuthModule } from "./features/auth/auth.module"
-import { AdminGuard, JwtGuard } from "./features/auth/guards"
-import { ClansModule } from "./features/clans/clans.module"
-import { FactionsModule } from "./features/factions/factions.module"
-import { PrismaModule } from "./features/prisma/prisma.module"
-import { PrismaService } from "./features/prisma/prisma.service"
-import { StatisticModule } from "./features/statistic/statistic.module"
-import { UsersModule } from "./features/users/users.module"
+import { AuthModule } from "./modules/auth/auth.module"
+import { AdminGuard, JwtGuard } from "./modules/auth/guards"
+import { ClansModule } from "./modules/clans/clans.module"
+import { FactionsModule } from "./modules/factions/factions.module"
+import { PrismaModule } from "./modules/prisma/prisma.module"
+import { PrismaService } from "./modules/prisma/prisma.service"
+import { StatisticModule } from "./modules/statistic/statistic.module"
+import { UsersModule } from "./modules/users/users.module"
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsersModule } from "./features/users/users.module"
     StatisticModule,
     FactionsModule,
     ClansModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [

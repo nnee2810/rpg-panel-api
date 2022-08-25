@@ -1,13 +1,18 @@
 import { ValidationPipe } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core"
+import * as cookieParser from "cookie-parser"
+import helmet from "helmet"
 import { AppModule } from "./app.module"
-import { PrismaService } from "./features/prisma/prisma.service"
+import { PrismaService } from "./modules/prisma/prisma.service"
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  })
 
+  app.use(cookieParser())
+  app.use(helmet())
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
-  app.enableCors()
 
   const prismaService = app.get(PrismaService)
   await prismaService.enableShutdownHooks(app)

@@ -43,13 +43,13 @@ export class UsersController {
     }
   }
 
-  @Get("profile/:name")
+  @Get(":name")
   async getUserProfile(@Param("name") name: string) {
     const user = await this.usersService.getProfileByName(name)
     return user
   }
 
-  @Get("profile/:name/properties")
+  @Get(":name/properties")
   async getUserProperties(@Param("name") name: string) {
     const properties = await this.usersService.getPropertiesByName(name)
     return properties
