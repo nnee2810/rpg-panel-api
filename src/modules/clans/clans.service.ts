@@ -1,12 +1,17 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import { clans, users } from "@prisma/client"
 import { PaginationDto } from "src/dto"
+import { PaginationData } from "src/interfaces"
 import { PrismaService } from "../prisma/prisma.service"
 
 @Injectable()
 export class ClansService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAll({ page, take }: PaginationDto) {
+  async getAll({
+    page,
+    take,
+  }: PaginationDto): Promise<PaginationData<Partial<clans>>> {
     try {
       const [data, total] = await this.prismaService.$transaction([
         this.prismaService.clans.findMany({
@@ -58,7 +63,10 @@ export class ClansService {
     }
   }
 
-  async getMembers(id: number, { page, take }: PaginationDto) {
+  async getMembers(
+    id: number,
+    { page, take }: PaginationDto,
+  ): Promise<PaginationData<Partial<users>>> {
     try {
       const [data, total] = await this.prismaService.$transaction([
         this.prismaService.users.findMany({

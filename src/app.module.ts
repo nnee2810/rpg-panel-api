@@ -9,8 +9,8 @@ import { FactionsModule } from "./modules/factions/factions.module"
 import { PrismaModule } from "./modules/prisma/prisma.module"
 import { PrismaService } from "./modules/prisma/prisma.service"
 import { StatisticModule } from "./modules/statistic/statistic.module"
+import { TicketsModule } from "./modules/tickets/tickets.module"
 import { UsersModule } from "./modules/users/users.module"
-import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [

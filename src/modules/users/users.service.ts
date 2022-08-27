@@ -3,7 +3,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common"
-import { Prisma } from "@prisma/client"
+import { Prisma, users } from "@prisma/client"
+import { PaginationData } from "src/interfaces"
 import { toJSON } from "src/utils"
 import { PrismaService } from "../prisma/prisma.service"
 import { GetUsersDto } from "./dto"
@@ -11,7 +12,11 @@ import { GetUsersDto } from "./dto"
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async getAll({ page, take, ...query }: GetUsersDto) {
+  async getAll({
+    page,
+    take,
+    ...query
+  }: GetUsersDto): Promise<PaginationData<Partial<users>>> {
     try {
       const where: Prisma.usersWhereInput = {
         name: {

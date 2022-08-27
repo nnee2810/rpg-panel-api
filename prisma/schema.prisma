@@ -1124,7 +1124,7 @@ model users {
   CarKey10           Int                     @default(0) @db.SmallInt
   RewardTime         Int
   tickets            panel_tickets[]
-  ticket_comments    panel_ticket_comments[]
+  ticketComments     panel_ticket_comments[]
 }
 
 enum PanelTicketCategory {
@@ -1136,16 +1136,16 @@ enum PanelTicketCategory {
 
 enum PanelTicketStatus {
   OPEN
-  RESOLVED
-  REJECTED
+  CLOSE
 }
 
 model panel_tickets {
   id          Int                     @id @default(autoincrement())
   user        users                   @relation(fields: [userId], references: [id])
   userId      Int                     @db.UnsignedSmallInt
-  category    PanelTicketCategory     @default(GENERAL)
+  category    PanelTicketCategory
   status      PanelTicketStatus       @default(OPEN)
+  title       String                  @db.VarChar(56)
   description String                  @db.VarChar(512)
   comments    panel_ticket_comments[]
   createdAt   DateTime                @default(now())
