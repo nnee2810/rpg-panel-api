@@ -1145,8 +1145,8 @@ model panel_tickets {
   userId      Int                     @db.UnsignedSmallInt
   category    PanelTicketCategory
   status      PanelTicketStatus       @default(OPEN)
-  title       String                  @db.VarChar(56)
-  description String                  @db.VarChar(512)
+  title       String                  @db.VarChar(50)
+  description String                  @db.VarChar(300)
   comments    panel_ticket_comments[]
   createdAt   DateTime                @default(now())
   updatedAt   DateTime                @updatedAt
@@ -1158,6 +1158,7 @@ model panel_ticket_comments {
   userId    Int           @db.UnsignedSmallInt
   ticket    panel_tickets @relation(fields: [ticketId], references: [id])
   ticketId  Int
+  content   String        @db.VarChar(300)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 }
