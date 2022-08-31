@@ -1,5 +1,5 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common"
-import { users } from "@prisma/client"
+import { Injectable } from "@nestjs/common"
+import { PanelTicketStatus, users } from "@prisma/client"
 import { toJSON } from "src/utils"
 import { PrismaService } from "../prisma/prisma.service"
 
@@ -7,27 +7,30 @@ import { PrismaService } from "../prisma/prisma.service"
 export class StatisticService {
   constructor(private prismaService: PrismaService) {}
 
-  async getOverview() {
-    const registered = await this.prismaService.users.count()
-    const online = await this.prismaService.users.count({
-      where: {
-        Status: 1,
-      },
-    })
-    const houses = await this.prismaService.houses.count()
-    const bizz = await this.prismaService.bizz.count()
-    const faction_logs = await this.prismaService.faction_logs.findMany({
-      orderBy: {
-        id: "desc",
-      },
-      take: 10,
-    })
+  async getServer() {
+    const [registered, online, houses, bizz, faction_logs] =
+      await this.prismaService.$transaction([
+        this.prismaService.users.count(),
+        this.prismaService.users.count({
+          where: {
+            Status: 1,
+          },
+        }),
+        this.prismaService.houses.count(),
+        this.prismaService.bizz.count(),
+        this.prismaService.faction_logs.findMany({
+          orderBy: {
+            id: "desc",
+          },
+          take: 10,
+        }),
+      ])
 
-    return { online, registered, houses, bizz, faction_logs }
+    return { registered, online, houses, bizz, faction_logs }
   }
 
-  async getTopLevel(): Promise<Partial<users>[]> {
-    const users = await this.prismaService.users.findMany({
+  getTopLevel(): Promise<Partial<users>[]> {
+    return this.prismaService.users.findMany({
       select: {
         id: true,
         name: true,
@@ -39,21 +42,16 @@ export class StatisticService {
       },
       take: 10,
     })
-    return users
   }
 
   async getTopRich(): Promise<Partial<users>[]> {
-    try {
-      const users = await this.prismaService
-        .$queryRaw`SELECT id, name, Status, lastOn, (Bank + Money) as totalMoney FROM users ORDER BY totalMoney DESC LIMIT 10`
-      return toJSON(users)
-    } catch (error) {
-      throw new InternalServerErrorException(error?.message)
-    }
+    const users = await this.prismaService
+      .$queryRaw`SELECT id, name, Status, lastOn, (Bank + Money) as totalMoney FROM users ORDER BY totalMoney DESC LIMIT 10`
+    return toJSON(users)
   }
 
-  async getTopConnectedTime(): Promise<Partial<users>[]> {
-    const users = await this.prismaService.users.findMany({
+  getTopConnectedTime(): Promise<Partial<users>[]> {
+    return this.prismaService.users.findMany({
       select: {
         id: true,
         name: true,
@@ -65,6 +63,22 @@ export class StatisticService {
       },
       take: 10,
     })
-    return users
+  }
+
+  async getTickets() {
+    const [openTickets, closeTickets] = await this.prismaService.$transaction([
+      this.prismaService.panel_tickets.count({
+        where: {
+          status: PanelTicketStatus.OPEN,
+        },
+      }),
+      this.prismaService.panel_tickets.count({
+        where: {
+          status: PanelTicketStatus.CLOSE,
+        },
+      }),
+    ])
+
+    return { openTickets, closeTickets }
   }
 }

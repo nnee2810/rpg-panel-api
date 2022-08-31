@@ -6,11 +6,11 @@ import { StatisticService } from "./statistic.service"
 export class StatisticController {
   constructor(private statisticService: StatisticService) {}
 
-  @Get("overview")
-  async getOverview() {
+  @Get("server")
+  async getServerStatistic() {
     try {
-      const overview = await this.statisticService.getOverview()
-      return overview
+      const data = await this.statisticService.getServer()
+      return data
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -41,6 +41,16 @@ export class StatisticController {
     try {
       const users = await this.statisticService.getTopConnectedTime()
       return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
+  }
+
+  @Get("tickets")
+  async getTicketsStatistic() {
+    try {
+      const data = await this.statisticService.getTickets()
+      return data
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

@@ -97,8 +97,8 @@ export class TicketsController {
     @Body() body: UpdateTicketDto,
   ): Promise<panel_tickets> {
     try {
-      const ticket = this.ticketsService.updateById(id, req.user.id, body)
-      if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
+      await this.getTicketById(req, id)
+      const ticket = this.ticketsService.updateById(id, body)
       return ticket
     } catch (error) {
       if (error instanceof HttpException)

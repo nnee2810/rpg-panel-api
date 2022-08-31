@@ -96,11 +96,7 @@ export class TicketsService {
     })
   }
 
-  updateById(
-    ticketId: number,
-    userId: number,
-    data: UpdateTicketDto,
-  ): Promise<panel_tickets> {
+  updateById(ticketId: number, data: UpdateTicketDto): Promise<panel_tickets> {
     return this.prismaService.panel_tickets.update({
       data: data || {},
       include: {
