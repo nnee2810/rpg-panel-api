@@ -1,7 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
+  HttpException,
+  InternalServerErrorException,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -10,9 +14,14 @@ import {
   Query,
   Req,
 } from "@nestjs/common"
-import { panel_tickets } from "@prisma/client"
+import {
+  PanelTicketStatus,
+  panel_tickets,
+  panel_ticket_comments,
+} from "@prisma/client"
 import { PaginationDto } from "src/dto"
-import { RequestWithUser } from "src/interfaces"
+import { PaginationData, RequestWithUser } from "src/interfaces"
+import { Admin } from "../auth/decorators"
 import {
   CreateTicketCommentDto,
   CreateTicketDto,
@@ -29,40 +38,73 @@ export class TicketsController {
   async createTicket(
     @Req() req: RequestWithUser,
     @Body() body: CreateTicketDto,
-  ) {
-    const ticket = await this.ticketsService.create(req.user.id, body)
-    return ticket
+  ): Promise<panel_tickets> {
+    try {
+      const totalTickets = (
+        await this.getTickets(req, {
+          status: PanelTicketStatus.OPEN,
+          page: 1,
+          take: 0,
+        })
+      ).total
+      if (totalTickets > 2) throw new BadRequestException("8")
+      const ticket = await this.ticketsService.create(req.user.id, body)
+      return ticket
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get()
   async getTickets(
     @Req() { user }: RequestWithUser,
     @Query() query: GetTicketsDto,
-  ) {
-    const tickets = this.ticketsService.getAll({
-      ...query,
-      userId: user.Admin ? undefined : user.id,
-    })
-    return tickets
+  ): Promise<PaginationData<Partial<panel_tickets>>> {
+    try {
+      const paginationData = await this.ticketsService.getAll({
+        ...query,
+        userId: user.Admin ? undefined : user.id,
+      })
+      return paginationData
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get(":id")
   async getTicketById(
+    @Req() { user }: RequestWithUser,
     @Param("id", ParseIntPipe) id: number,
   ): Promise<panel_tickets> {
-    const ticket = await this.ticketsService.getById(id)
-    if (!ticket) throw new NotFoundException()
-    return ticket
+    try {
+      const ticket = await this.ticketsService.getById(id)
+      if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
+      if (!user.Admin && user.id !== ticket.userId)
+        throw new ForbiddenException()
+      return ticket
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.message, error.getStatus())
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
+  @Admin(1)
   @Patch(":id")
   async updateTicketById(
+    @Req() { user }: RequestWithUser,
     @Param("id", ParseIntPipe) id: number,
-    data: UpdateTicketDto,
+    @Body() body: UpdateTicketDto,
   ): Promise<panel_tickets> {
-    const ticket = this.ticketsService.updateById(id, data)
-    if (!ticket) throw new NotFoundException()
-    return ticket
+    try {
+      const ticket = this.ticketsService.updateById(id, user.id, body)
+      if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
+      return ticket
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.message, error.getStatus())
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Post(":id/comments")
@@ -70,17 +112,31 @@ export class TicketsController {
     @Req() req: RequestWithUser,
     @Param("id", ParseIntPipe) id: number,
     @Body() body: CreateTicketCommentDto,
-  ) {
-    const comments = this.ticketsService.createComment(req.user.id, id, body)
-    return comments
+  ): Promise<panel_ticket_comments> {
+    try {
+      const ticket = await this.getTicketById(req, id)
+      if (ticket.status === PanelTicketStatus.CLOSE)
+        throw new BadRequestException("Phiếu đã đóng, vui lòng tải lại trang")
+      const comment = this.ticketsService.createComment(req.user.id, id, body)
+      return comment
+    } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.message, error.getStatus())
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get(":id/comments")
   async getTicketComments(
     @Param("id", ParseIntPipe) id: number,
     @Query() query: PaginationDto,
-  ) {
-    const comments = this.ticketsService.getComments(id, query)
-    return comments
+  ): Promise<PaginationData<panel_ticket_comments>> {
+    try {
+      await this.ticketsService.getById(id)
+      const comments = await this.ticketsService.getComments(id, query)
+      return comments
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 }

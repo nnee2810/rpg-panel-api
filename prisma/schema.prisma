@@ -1123,7 +1123,9 @@ model users {
   CarKey9            Int                     @default(0) @db.SmallInt
   CarKey10           Int                     @default(0) @db.SmallInt
   RewardTime         Int
-  tickets            panel_tickets[]
+  tickets            panel_tickets[]         @relation("TicketCreatedBy")
+  assignTickets      panel_tickets[]         @relation("TicketAssignTo")
+  closeTickets       panel_tickets[]         @relation("TicketCloseBy")
   ticketComments     panel_ticket_comments[]
 }
 
@@ -1141,8 +1143,12 @@ enum PanelTicketStatus {
 
 model panel_tickets {
   id          Int                     @id @default(autoincrement())
-  user        users                   @relation(fields: [userId], references: [id])
+  user        users                   @relation("TicketCreatedBy", fields: [userId], references: [id])
   userId      Int                     @db.UnsignedSmallInt
+  assignTo    users?                  @relation("TicketAssignTo", fields: [assignToId], references: [id])
+  assignToId  Int?                    @db.UnsignedSmallInt
+  closeBy     users?                  @relation("TicketCloseBy", fields: [closeById], references: [id])
+  closeById   Int?                    @db.UnsignedSmallInt
   category    PanelTicketCategory
   status      PanelTicketStatus       @default(OPEN)
   title       String                  @db.VarChar(50)

@@ -1,4 +1,5 @@
-import { Controller, Get } from "@nestjs/common"
+import { Controller, Get, InternalServerErrorException } from "@nestjs/common"
+import { users } from "@prisma/client"
 import { StatisticService } from "./statistic.service"
 
 @Controller("statistic")
@@ -7,25 +8,41 @@ export class StatisticController {
 
   @Get("overview")
   async getOverview() {
-    const overview = await this.statisticService.getOverview()
-    return overview
+    try {
+      const overview = await this.statisticService.getOverview()
+      return overview
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get("top-level")
-  async getTopLevel() {
-    const users = await this.statisticService.getTopLevel()
-    return users
+  async getTopLevel(): Promise<Partial<users>[]> {
+    try {
+      const users = await this.statisticService.getTopLevel()
+      return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get("top-rich")
-  async getTopRich() {
-    const users = await this.statisticService.getTopRich()
-    return users
+  async getTopRich(): Promise<Partial<users>[]> {
+    try {
+      const users = await this.statisticService.getTopRich()
+      return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 
   @Get("top-connected-time")
-  async getTopConnectedTime() {
-    const users = await this.statisticService.getTopConnectedTime()
-    return users
+  async getTopConnectedTime(): Promise<Partial<users>[]> {
+    try {
+      const users = await this.statisticService.getTopConnectedTime()
+      return users
+    } catch (error) {
+      throw new InternalServerErrorException(error?.message)
+    }
   }
 }

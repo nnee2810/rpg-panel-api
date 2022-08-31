@@ -12,9 +12,7 @@ export class AdminGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     )
     if (!requiredAdminLevel) return true
-
     const { user } = context.switchToHttp().getRequest<RequestWithUser>()
-
     return user.Admin >= requiredAdminLevel
   }
 }
