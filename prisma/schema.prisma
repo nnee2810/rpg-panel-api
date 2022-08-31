@@ -1125,7 +1125,6 @@ model users {
   RewardTime         Int
   tickets            panel_tickets[]         @relation("TicketCreatedBy")
   assignTickets      panel_tickets[]         @relation("TicketAssignTo")
-  closeTickets       panel_tickets[]         @relation("TicketCloseBy")
   ticketComments     panel_ticket_comments[]
 }
 
@@ -1147,8 +1146,6 @@ model panel_tickets {
   userId      Int                     @db.UnsignedSmallInt
   assignTo    users?                  @relation("TicketAssignTo", fields: [assignToId], references: [id])
   assignToId  Int?                    @db.UnsignedSmallInt
-  closeBy     users?                  @relation("TicketCloseBy", fields: [closeById], references: [id])
-  closeById   Int?                    @db.UnsignedSmallInt
   category    PanelTicketCategory
   status      PanelTicketStatus       @default(OPEN)
   title       String                  @db.VarChar(50)

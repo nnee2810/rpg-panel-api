@@ -1,5 +1,5 @@
 import { PanelTicketCategory, PanelTicketStatus } from "@prisma/client"
-import { IsIn, IsOptional } from "class-validator"
+import { IsIn, IsNumber, IsOptional } from "class-validator"
 
 export class UpdateTicketDto {
   @IsOptional()
@@ -9,4 +9,8 @@ export class UpdateTicketDto {
   @IsOptional()
   @IsIn(Object.keys(PanelTicketStatus))
   status?: PanelTicketStatus
+
+  @IsOptional()
+  @IsNumber()
+  assignToId?: number
 }

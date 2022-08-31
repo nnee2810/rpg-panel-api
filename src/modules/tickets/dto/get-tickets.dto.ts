@@ -24,6 +24,11 @@ export class GetTicketsDto extends PaginationDto {
   status?: PanelTicketStatus
 
   @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  assignToId?: number
+
+  @IsOptional()
   @IsString()
   @MaxLength(56)
   title?: string

@@ -1,10 +1,5 @@
 import { Injectable } from "@nestjs/common"
-import {
-  PanelTicketStatus,
-  panel_tickets,
-  panel_ticket_comments,
-  Prisma,
-} from "@prisma/client"
+import { panel_tickets, panel_ticket_comments, Prisma } from "@prisma/client"
 import { PaginationDto } from "src/dto"
 import { PaginationData } from "src/interfaces"
 import { PrismaService } from "src/modules/prisma/prisma.service"
@@ -50,6 +45,12 @@ export class TicketsService {
               name: true,
             },
           },
+          assignTo: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           category: true,
           title: true,
           status: true,
@@ -88,12 +89,6 @@ export class TicketsService {
             name: true,
           },
         },
-        closeBy: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
       },
       where: {
         id,
@@ -107,12 +102,7 @@ export class TicketsService {
     data: UpdateTicketDto,
   ): Promise<panel_tickets> {
     return this.prismaService.panel_tickets.update({
-      data: data
-        ? {
-            ...data,
-            closeById: data.status === PanelTicketStatus.CLOSE ? userId : null,
-          }
-        : {},
+      data: data || {},
       include: {
         user: {
           select: {
@@ -121,12 +111,6 @@ export class TicketsService {
           },
         },
         assignTo: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        closeBy: {
           select: {
             id: true,
             name: true,

@@ -57,13 +57,13 @@ export class TicketsController {
 
   @Get()
   async getTickets(
-    @Req() { user }: RequestWithUser,
+    @Req() req: RequestWithUser,
     @Query() query: GetTicketsDto,
   ): Promise<PaginationData<Partial<panel_tickets>>> {
     try {
       const paginationData = await this.ticketsService.getAll({
         ...query,
-        userId: user.Admin ? undefined : user.id,
+        userId: req.user.Admin ? undefined : req.user.id,
       })
       return paginationData
     } catch (error) {
@@ -73,13 +73,13 @@ export class TicketsController {
 
   @Get(":id")
   async getTicketById(
-    @Req() { user }: RequestWithUser,
+    @Req() req: RequestWithUser,
     @Param("id", ParseIntPipe) id: number,
   ): Promise<panel_tickets> {
     try {
       const ticket = await this.ticketsService.getById(id)
       if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
-      if (!user.Admin && user.id !== ticket.userId)
+      if (!req.user.Admin && req.user.id !== ticket.userId)
         throw new ForbiddenException()
       return ticket
     } catch (error) {
@@ -92,12 +92,12 @@ export class TicketsController {
   @Admin(1)
   @Patch(":id")
   async updateTicketById(
-    @Req() { user }: RequestWithUser,
+    @Req() req: RequestWithUser,
     @Param("id", ParseIntPipe) id: number,
     @Body() body: UpdateTicketDto,
   ): Promise<panel_tickets> {
     try {
-      const ticket = this.ticketsService.updateById(id, user.id, body)
+      const ticket = this.ticketsService.updateById(id, req.user.id, body)
       if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
       return ticket
     } catch (error) {
@@ -117,7 +117,11 @@ export class TicketsController {
       const ticket = await this.getTicketById(req, id)
       if (ticket.status === PanelTicketStatus.CLOSE)
         throw new BadRequestException("Phiếu đã đóng, vui lòng tải lại trang")
-      const comment = this.ticketsService.createComment(req.user.id, id, body)
+      const comment = this.ticketsService.createComment(id, req.user.id, body)
+      if (!ticket.assignToId && !!req.user.Admin)
+        this.updateTicketById(req, id, {
+          assignToId: req.user.id,
+        })
       return comment
     } catch (error) {
       if (error instanceof HttpException)
