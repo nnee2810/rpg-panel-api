@@ -15,7 +15,7 @@ import { ClansService } from "./clans.service"
 
 @Controller("clans")
 export class ClansController {
-  constructor(private readonly clansService: ClansService) {}
+  constructor(private clansService: ClansService) {}
 
   @Get()
   async getClans(
@@ -33,7 +33,7 @@ export class ClansController {
   async getClanOverview(@Param("id", ParseIntPipe) id: number): Promise<clans> {
     try {
       const clan = await this.clansService.getOverview(id)
-      if (!clan) throw new NotFoundException("Clan không tồn tại")
+      if (!clan) throw new NotFoundException("Không tìm thấy clan")
       return clan
     } catch (error) {
       if (error instanceof HttpException)

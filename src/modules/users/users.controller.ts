@@ -63,7 +63,7 @@ export class UsersController {
   async getUserProfile(@Param("name") name: string) {
     try {
       const user = await this.usersService.getProfileByName(name)
-      if (!user) throw new NotFoundException("Người chơi không tồn tại")
+      if (!user) throw new NotFoundException("Không tìm thấy người chơi")
       return user
     } catch (error) {
       if (error instanceof HttpException)

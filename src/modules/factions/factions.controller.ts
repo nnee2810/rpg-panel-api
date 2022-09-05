@@ -35,7 +35,7 @@ export class FactionsController {
   ): Promise<Partial<factions>> {
     try {
       const faction = await this.factionsService.getOverview(id)
-      if (!faction) throw new NotFoundException("Faction không tồn tại")
+      if (!faction) throw new NotFoundException("Không tìm thấy faction")
       return faction
     } catch (error) {
       if (error instanceof HttpException)

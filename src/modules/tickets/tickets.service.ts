@@ -3,12 +3,7 @@ import { panel_tickets, panel_ticket_comments, Prisma } from "@prisma/client"
 import { PaginationDto } from "src/dto"
 import { PaginationData } from "src/interfaces"
 import { PrismaService } from "src/modules/prisma/prisma.service"
-import {
-  CreateTicketCommentDto,
-  CreateTicketDto,
-  GetTicketsDto,
-  UpdateTicketDto,
-} from "./dto"
+import { CreateTicketCommentDto, CreateTicketDto, UpdateTicketDto } from "./dto"
 
 @Injectable()
 export class TicketsService {
@@ -23,18 +18,10 @@ export class TicketsService {
     })
   }
 
-  async getAll({
-    page,
-    take,
-    ...query
-  }: GetTicketsDto): Promise<PaginationData<Partial<panel_tickets>>> {
-    const where: Prisma.panel_ticketsWhereInput = {
-      ...query,
-      title: {
-        contains: query.title,
-      },
-    }
-
+  async getAll(
+    where: Prisma.panel_ticketsWhereInput,
+    { page, take }: PaginationDto,
+  ): Promise<PaginationData<Partial<panel_tickets>>> {
     const [data, total] = await this.prismaService.$transaction([
       this.prismaService.panel_tickets.findMany({
         select: {
@@ -59,7 +46,7 @@ export class TicketsService {
         },
         where,
         orderBy: {
-          updatedAt: "desc",
+          createdAt: "desc",
         },
         skip: (page - 1) * take,
         take,

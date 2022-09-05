@@ -32,7 +32,7 @@ import { TicketsService } from "./tickets.service"
 
 @Controller("tickets")
 export class TicketsController {
-  constructor(private readonly ticketsService: TicketsService) {}
+  constructor(private ticketsService: TicketsService) {}
 
   @Post()
   async createTicket(
@@ -47,10 +47,13 @@ export class TicketsController {
           take: 0,
         })
       ).total
-      if (totalTickets > 2) throw new BadRequestException("8")
+      if (totalTickets > 2)
+        throw new BadRequestException("Bạn đang có 3 phiếu đang mở")
       const ticket = await this.ticketsService.create(req.user.id, body)
       return ticket
     } catch (error) {
+      if (error instanceof HttpException)
+        throw new HttpException(error.message, error.getStatus())
       throw new InternalServerErrorException(error?.message)
     }
   }
@@ -58,13 +61,22 @@ export class TicketsController {
   @Get()
   async getTickets(
     @Req() req: RequestWithUser,
-    @Query() query: GetTicketsDto,
+    @Query() { title, page, take, ...query }: GetTicketsDto,
   ): Promise<PaginationData<Partial<panel_tickets>>> {
     try {
-      const paginationData = await this.ticketsService.getAll({
-        ...query,
-        userId: req.user.Admin ? undefined : req.user.id,
-      })
+      const paginationData = await this.ticketsService.getAll(
+        {
+          ...query,
+          userId: req.user.Admin ? undefined : req.user.id,
+          title: {
+            contains: title,
+          },
+        },
+        {
+          page,
+          take,
+        },
+      )
       return paginationData
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
@@ -78,7 +90,7 @@ export class TicketsController {
   ): Promise<panel_tickets> {
     try {
       const ticket = await this.ticketsService.getById(id)
-      if (!ticket) throw new NotFoundException("Phiếu không tồn tại")
+      if (!ticket) throw new NotFoundException("Không tìm thấy phiếu")
       if (!req.user.Admin && req.user.id !== ticket.userId)
         throw new ForbiddenException()
       return ticket
@@ -98,7 +110,7 @@ export class TicketsController {
   ): Promise<panel_tickets> {
     try {
       await this.getTicketById(req, id)
-      const ticket = this.ticketsService.updateById(id, body)
+      const ticket = await this.ticketsService.updateById(id, body)
       return ticket
     } catch (error) {
       if (error instanceof HttpException)
@@ -117,7 +129,11 @@ export class TicketsController {
       const ticket = await this.getTicketById(req, id)
       if (ticket.status === PanelTicketStatus.CLOSE)
         throw new BadRequestException("Phiếu đã đóng, vui lòng tải lại trang")
-      const comment = this.ticketsService.createComment(id, req.user.id, body)
+      const comment = await this.ticketsService.createComment(
+        id,
+        req.user.id,
+        body,
+      )
       if (!ticket.assignToId && !!req.user.Admin)
         this.updateTicketById(req, id, {
           assignToId: req.user.id,

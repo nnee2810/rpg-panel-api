@@ -11,11 +11,6 @@ import { PaginationDto } from "src/dto"
 
 export class GetTicketsDto extends PaginationDto {
   @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  userId?: number
-
-  @IsOptional()
   @IsIn(Object.keys(PanelTicketCategory))
   category?: PanelTicketCategory
 

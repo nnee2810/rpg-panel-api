@@ -10,6 +10,7 @@ import { PrismaModule } from "./modules/prisma/prisma.module"
 import { PrismaService } from "./modules/prisma/prisma.service"
 import { StatisticModule } from "./modules/statistic/statistic.module"
 import { TicketsModule } from "./modules/tickets/tickets.module"
+import { TopupModule } from "./modules/topup/topup.module"
 import { UsersModule } from "./modules/users/users.module"
 
 @Module({
@@ -21,6 +22,7 @@ import { UsersModule } from "./modules/users/users.module"
     FactionsModule,
     ClansModule,
     TicketsModule,
+    TopupModule,
   ],
   controllers: [AppController],
   providers: [

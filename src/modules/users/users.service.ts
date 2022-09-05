@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import { Injectable } from "@nestjs/common"
 import { bizz, cars, houses, Prisma, users } from "@prisma/client"
 import { PaginationData } from "src/interfaces"
 import { toJSON } from "src/utils"
@@ -141,16 +141,12 @@ export class UsersService {
     return { vehicles, house, bizz }
   }
 
-  async updateByName(name: string, data: Prisma.usersUpdateInput) {
-    try {
-      await this.prismaService.users.updateMany({
-        data,
-        where: {
-          name,
-        },
-      })
-    } catch (error) {
-      throw new InternalServerErrorException(error?.message)
-    }
+  updateById(id: number, data: Prisma.usersUpdateInput) {
+    return this.prismaService.users.update({
+      data,
+      where: {
+        id,
+      },
+    })
   }
 }
