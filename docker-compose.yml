@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  service:
+    image: 526510891582.dkr.ecr.ap-southeast-1.amazonaws.com/kmas-service:latest
+    restart: always
+    ports:
+      - "443:5000"

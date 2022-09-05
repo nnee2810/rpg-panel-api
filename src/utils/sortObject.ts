@@ -1,7 +1,7 @@
-export function sortObject(obj: Object) {
-  let sorted = {}
-  let str = []
-  for (let key in obj) {
+export function sortObject(obj: Record<string, string | number | boolean>) {
+  const sorted = {}
+  const str = []
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       str.push(encodeURIComponent(key))
     }
