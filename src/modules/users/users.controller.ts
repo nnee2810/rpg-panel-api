@@ -22,8 +22,7 @@ export class UsersController {
     @Query() query: GetUsersDto,
   ): Promise<PaginationData<Partial<users>>> {
     try {
-      const paginationData = await this.usersService.getAll(query)
-      return paginationData
+      return await this.usersService.getAll(query)
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -79,8 +78,7 @@ export class UsersController {
     bizz: bizz
   }> {
     try {
-      const properties = await this.usersService.getPropertiesByName(name)
-      return properties
+      return await this.usersService.getPropertiesByName(name)
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

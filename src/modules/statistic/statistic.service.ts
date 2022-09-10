@@ -45,9 +45,10 @@ export class StatisticService {
   }
 
   async getTopRich(): Promise<Partial<users>[]> {
-    const users = await this.prismaService
-      .$queryRaw`SELECT id, name, Status, lastOn, (Bank + Money) as totalMoney FROM users ORDER BY totalMoney DESC LIMIT 10`
-    return toJSON(users)
+    return toJSON(
+      await this.prismaService
+        .$queryRaw`SELECT id, name, Status, lastOn, (Bank + Money) as totalMoney FROM users ORDER BY totalMoney DESC LIMIT 10`,
+    )
   }
 
   getTopConnectedTime(): Promise<Partial<users>[]> {

@@ -108,10 +108,10 @@ export class UsersService {
     house: Partial<houses>
     bizz: bizz
   }> {
-    const vehicles = await this.prismaService.cars.findMany({
+    const userVehicles = await this.prismaService.cars.findMany({
       where: { Owner: name },
     })
-    const house = await this.prismaService.houses.findFirst({
+    const userHouse = await this.prismaService.houses.findFirst({
       select: {
         ID: true,
         Discription: true,
@@ -124,7 +124,7 @@ export class UsersService {
         Owner: name,
       },
     })
-    const bizz = toJSON(
+    const userBizz = toJSON(
       await this.prismaService.bizz.findFirst({
         select: {
           ID: true,
@@ -138,7 +138,7 @@ export class UsersService {
         },
       }),
     )
-    return { vehicles, house, bizz }
+    return { vehicles: userVehicles, house: userHouse, bizz: userBizz }
   }
 
   updateById(id: number, data: Prisma.usersUpdateInput) {

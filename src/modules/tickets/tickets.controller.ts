@@ -49,8 +49,7 @@ export class TicketsController {
       ).total
       if (totalTickets > 2)
         throw new BadRequestException("Bạn đang có 3 phiếu đang mở")
-      const ticket = await this.ticketsService.create(req.user.id, body)
-      return ticket
+      return await this.ticketsService.create(req.user.id, body)
     } catch (error) {
       if (error instanceof HttpException)
         throw new HttpException(error.message, error.getStatus())
@@ -64,7 +63,7 @@ export class TicketsController {
     @Query() { title, page, take, ...query }: GetTicketsDto,
   ): Promise<PaginationData<Partial<panel_tickets>>> {
     try {
-      const paginationData = await this.ticketsService.getAll(
+      return await this.ticketsService.getAll(
         {
           ...query,
           userId: req.user.Admin ? undefined : req.user.id,
@@ -77,7 +76,6 @@ export class TicketsController {
           take,
         },
       )
-      return paginationData
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -110,8 +108,7 @@ export class TicketsController {
   ): Promise<panel_tickets> {
     try {
       await this.getTicketById(req, id)
-      const ticket = await this.ticketsService.updateById(id, body)
-      return ticket
+      return await this.ticketsService.updateById(id, body)
     } catch (error) {
       if (error instanceof HttpException)
         throw new HttpException(error.message, error.getStatus())
@@ -153,8 +150,7 @@ export class TicketsController {
   ): Promise<PaginationData<panel_ticket_comments>> {
     try {
       await this.ticketsService.getById(id)
-      const comments = await this.ticketsService.getComments(id, query)
-      return comments
+      return await this.ticketsService.getComments(id, query)
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

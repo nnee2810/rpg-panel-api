@@ -34,7 +34,7 @@ export class TopupController {
     @Query() { name, page, take }: GetTxnLogsDto,
   ): Promise<PaginationData<panel_topup_logs>> {
     try {
-      const paginationData = await this.topupService.getTxnLogs(
+      return await this.topupService.getTxnLogs(
         {
           user: {
             id: req.user.Admin ? undefined : req.user.id,
@@ -45,7 +45,6 @@ export class TopupController {
         },
         { page, take },
       )
-      return paginationData
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -77,8 +76,7 @@ export class TopupController {
     try {
       if (req.user.Status === 1)
         throw new BadRequestException("Hãy thoát game trước khi thanh toán")
-      const paymentUrl = this.topupService.createPayment(req, body)
-      return paymentUrl
+      return this.topupService.createPayment(req, body)
     } catch (error) {
       if (error instanceof HttpException)
         throw new HttpException(error.message, error.getStatus())

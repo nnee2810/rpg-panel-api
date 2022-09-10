@@ -1,7 +1,32 @@
-version: "3.8"
-services:
-  service:
-    image: 526510891582.dkr.ecr.ap-southeast-1.amazonaws.com/rpg-service:latest
-    restart: always
-    ports:
-      - "443:5000"
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.2
+
+jobs:
+  build:
+    executor: aws-ecr/default
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: $AWS_REGION
+          registry-id: AWS_REGISTRY_ID
+          repo: $AWS_REPO_NAME
+  deploy:
+    machine: true
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - $AWS_EC2_FINGERPRINTS
+      - run: ssh $AWS_EC2_USER@$AWS_EC2_IP 'cd kmas-service && ./deploy.sh'
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build

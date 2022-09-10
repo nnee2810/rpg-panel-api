@@ -22,8 +22,7 @@ export class FactionsController {
     @Query() query: PaginationDto,
   ): Promise<PaginationData<Partial<factions>>> {
     try {
-      const paginationData = await this.factionsService.getAll(query)
-      return paginationData
+      return await this.factionsService.getAll(query)
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -50,8 +49,7 @@ export class FactionsController {
     @Query() query: PaginationDto,
   ): Promise<PaginationData<Partial<users>>> {
     try {
-      const paginationData = await this.factionsService.getMembers(id, query)
-      return paginationData
+      return await this.factionsService.getMembers(id, query)
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }

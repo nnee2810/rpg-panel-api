@@ -9,8 +9,7 @@ export class StatisticController {
   @Get("server")
   async getServerStatistic() {
     try {
-      const data = await this.statisticService.getServer()
-      return data
+      return await this.statisticService.getServer()
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -19,8 +18,7 @@ export class StatisticController {
   @Get("top-level")
   async getTopLevel(): Promise<Partial<users>[]> {
     try {
-      const users = await this.statisticService.getTopLevel()
-      return users
+      return await this.statisticService.getTopLevel()
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -29,8 +27,7 @@ export class StatisticController {
   @Get("top-rich")
   async getTopRich(): Promise<Partial<users>[]> {
     try {
-      const users = await this.statisticService.getTopRich()
-      return users
+      return await this.statisticService.getTopRich()
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -39,8 +36,7 @@ export class StatisticController {
   @Get("top-connected-time")
   async getTopConnectedTime(): Promise<Partial<users>[]> {
     try {
-      const users = await this.statisticService.getTopConnectedTime()
-      return users
+      return await this.statisticService.getTopConnectedTime()
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
@@ -49,8 +45,7 @@ export class StatisticController {
   @Get("tickets")
   async getTicketsStatistic() {
     try {
-      const data = await this.statisticService.getTickets()
-      return data
+      return await this.statisticService.getTickets()
     } catch (error) {
       throw new InternalServerErrorException(error?.message)
     }
