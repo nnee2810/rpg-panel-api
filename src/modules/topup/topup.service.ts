@@ -65,7 +65,11 @@ export class TopupService {
     })
   }
 
-  createPayment(req: RequestWithUser, { amount }: CreatePaymentDto): string {
+  createPayment(
+    req: RequestWithUser,
+    { amount }: CreatePaymentDto,
+    ip: string,
+  ): string {
     const currentTime = moment()
     const params = {
       vnp_Version: "2.1.0",
@@ -74,7 +78,7 @@ export class TopupService {
       vnp_Amount: amount * 100,
       vnp_CreateDate: currentTime.format("YYYYMMDDHHmmss"),
       vnp_CurrCode: "VND",
-      vnp_IpAddr: req.ip,
+      vnp_IpAddr: ip,
       vnp_Locale: "vn",
       vnp_OrderInfo: `Thanh toan goi nap ${amount} cho ${req.user.name}`,
       vnp_ReturnUrl: process.env.VNP_RETURN_URL,

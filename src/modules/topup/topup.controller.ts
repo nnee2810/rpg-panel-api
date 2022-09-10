@@ -6,6 +6,7 @@ import {
   Get,
   HttpException,
   InternalServerErrorException,
+  Ip,
   NotFoundException,
   Param,
   Post,
@@ -72,11 +73,12 @@ export class TopupController {
   createPayment(
     @Req() req: RequestWithUser,
     @Body() body: CreatePaymentDto,
+    @Ip() ip: string,
   ): string {
     try {
       if (req.user.Status === 1)
         throw new BadRequestException("Hãy thoát game trước khi thanh toán")
-      return this.topupService.createPayment(req, body)
+      return this.topupService.createPayment(req, body, ip)
     } catch (error) {
       if (error instanceof HttpException)
         throw new HttpException(error.message, error.getStatus())
