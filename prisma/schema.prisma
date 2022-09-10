@@ -1123,10 +1123,58 @@ model users {
   CarKey9            Int                     @default(0) @db.SmallInt
   CarKey10           Int                     @default(0) @db.SmallInt
   RewardTime         Int
-  tickets            panel_tickets[]         @relation("TicketCreatedBy")
-  assignTickets      panel_tickets[]         @relation("TicketAssignTo")
   ticketComments     panel_ticket_comments[]
+  assignTickets      panel_tickets[]         @relation("TicketAssignTo")
+  tickets            panel_tickets[]         @relation("TicketCreatedBy")
   topup_logs         panel_topup_logs[]
+}
+
+model panel_tickets {
+  id          Int                     @id @default(autoincrement())
+  userId      Int                     @db.UnsignedSmallInt
+  assignToId  Int?                    @db.UnsignedSmallInt
+  category    PanelTicketCategory
+  status      PanelTicketStatus       @default(OPEN)
+  title       String                  @db.VarChar(50)
+  description String                  @db.VarChar(300)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  assignTo    users?                  @relation("TicketAssignTo", fields: [assignToId], references: [id])
+  user        users                   @relation("TicketCreatedBy", fields: [userId], references: [id])
+  comments    panel_ticket_comments[]
+
+  @@index([assignToId], map: "panel_tickets_assignToId_fkey")
+  @@index([userId], map: "panel_tickets_userId_fkey")
+}
+
+model panel_ticket_comments {
+  id        Int           @id @default(autoincrement())
+  userId    Int           @db.UnsignedSmallInt
+  ticketId  Int
+  content   String        @db.VarChar(300)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  ticket    panel_tickets @relation(fields: [ticketId], references: [id])
+  user      users         @relation(fields: [userId], references: [id])
+
+  @@index([ticketId], map: "panel_ticket_comments_ticketId_fkey")
+  @@index([userId], map: "panel_ticket_comments_userId_fkey")
+}
+
+model panel_topup_logs {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @db.UnsignedSmallInt
+  responseCode  String
+  amount        Int
+  received      Int
+  newBalance    Int
+  transactionNo String?
+  txnRef        String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          users    @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "panel_topup_logs_userId_fkey")
 }
 
 enum PanelTicketCategory {
@@ -1139,44 +1187,4 @@ enum PanelTicketCategory {
 enum PanelTicketStatus {
   OPEN
   CLOSE
-}
-
-model panel_tickets {
-  id          Int                     @id @default(autoincrement())
-  user        users                   @relation("TicketCreatedBy", fields: [userId], references: [id])
-  userId      Int                     @db.UnsignedSmallInt
-  assignTo    users?                  @relation("TicketAssignTo", fields: [assignToId], references: [id])
-  assignToId  Int?                    @db.UnsignedSmallInt
-  category    PanelTicketCategory
-  status      PanelTicketStatus       @default(OPEN)
-  title       String                  @db.VarChar(50)
-  description String                  @db.VarChar(300)
-  comments    panel_ticket_comments[]
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @updatedAt
-}
-
-model panel_ticket_comments {
-  id        Int           @id @default(autoincrement())
-  user      users         @relation(fields: [userId], references: [id])
-  userId    Int           @db.UnsignedSmallInt
-  ticket    panel_tickets @relation(fields: [ticketId], references: [id])
-  ticketId  Int
-  content   String        @db.VarChar(300)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-}
-
-model panel_topup_logs {
-  id            Int      @id @default(autoincrement())
-  user          users    @relation(fields: [userId], references: [id])
-  userId        Int      @db.UnsignedSmallInt
-  transactionNo String?
-  txnRef        String   @unique()
-  responseCode  String
-  amount        Int
-  received      Int
-  newBalance    Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 }
