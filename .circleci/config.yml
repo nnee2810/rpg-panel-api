@@ -21,7 +21,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - $SSH_FINGERPRINTS
-      - run: ssh $SSH_USER@$SSH_IP 'cd rpg-service && ./deploy.sh'
+      - run: ssh $SSH_USER@$SSH_IP 'cd rpg-panel-api && ./deploy.sh'
 
 workflows:
   build-and-deploy:
